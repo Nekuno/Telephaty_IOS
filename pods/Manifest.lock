@@ -1,0 +1,19 @@
+PODS:
+  - CSNotificationView (0.5.1)
+  - ionicons (1.5.2)
+  - JSQMessagesViewController (6.0-beta6):
+    - JSQSystemSoundPlayer (~> 2.0.0)
+  - JSQSystemSoundPlayer (2.0.0)
+
+DEPENDENCIES:
+  - CSNotificationView
+  - ionicons
+  - JSQMessagesViewController
+
+SPEC CHECKSUMS:
+  CSNotificationView: 647c524da966e21d082263f5146e5ba62f67c2b4
+  ionicons: 6be0e241a437a7e69c50cbc8e1700ee8d1535a58
+  JSQMessagesViewController: 6e78b14e804a0ac4353765ef40e9d20c157a0ebf
+  JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
+
+COCOAPODS: 0.34.2

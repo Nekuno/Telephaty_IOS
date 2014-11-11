@@ -365,6 +365,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - KNTelephatyServiceDelegate
 
 - (void)telephatyServiceDidReceiveMessage:(NSString *)message {
+  
   [self didPressSendButton:nil withMessageText:message senderId:@"---" senderDisplayName:@"" date:[NSDate date]];
 }
 

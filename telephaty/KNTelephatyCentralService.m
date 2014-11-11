@@ -421,16 +421,27 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     return;
   }
   
-  NSString *message = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
-  NSArray *arrayMessage = [message componentsSeparatedByString:@"|"];
   
-  NSLog(@"didUpdateValueForChar: Value: %@", [arrayMessage lastObject]);
+  
+  NSString *messageReceived = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
+  
+  NSString *typeMsg = [messageReceived substringToIndex:1];
+  NSString *message;
+  NSString *emisorId;
+  
+  if ([typeMsg integerValue] == 1) {
+    message = [messageReceived substringFromIndex:32];
+    emisorId = [messageReceived substringFromIndex:16];
+  } else {
+    message = [messageReceived substringFromIndex:48];
+    emisorId = [messageReceived substringFromIndex:32];
+  }
+  NSLog(@"didUpdateValueForChar: Value: %@", message);
   
   NSString *myIdentifier = [AppDelegate sharedDelegate].telephatyService.identifier;
-  NSString *messageIdentifier = [arrayMessage firstObject];
   
-  if (![myIdentifier isEqualToString:messageIdentifier]) {
-    [self.delegateService telephatyCentralServiceDidReceiveMessage:[arrayMessage lastObject]];
+  if (![myIdentifier isEqualToString:emisorId]) {
+    [self.delegateService telephatyCentralServiceDidReceiveMessage:message];
   }
   
 //  NSLog(@"didUpdateValueForChar: Value: %@", characteristic.value);

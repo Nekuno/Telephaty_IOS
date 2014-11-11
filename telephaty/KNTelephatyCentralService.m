@@ -14,6 +14,11 @@ static const NSTimeInterval kKNCBScanningTimeout    = 10.0;
 static const NSTimeInterval kKNCBConnectingTimeout  = 10.0;
 static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 
+static const NSInteger kIndexStartEmisorForType1     = 16.0;
+static const NSInteger kIndexStartEmisorForType2     = 32.0;
+static const NSInteger kIndexStarMsgForType1         = 32.0;
+static const NSInteger kIndexStarMsgForType2         = 48.0;
+
 @interface KNTelephatyCentralService() <CBPeripheralDelegate, CBCentralManagerDelegate>
 
 // CoreBluetooth
@@ -261,7 +266,7 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
       }
       break;
     default:
-      NSLog(@"centralManager did update: %ld", central.state);
+      NSLog(@"centralManager did update: %d", central.state);
       break;
   }
 }
@@ -421,8 +426,6 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
     return;
   }
   
-  
-  
   NSString *messageReceived = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
   
   NSString *typeMsg = [messageReceived substringToIndex:1];
@@ -430,11 +433,11 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
   NSString *emisorId;
   
   if ([typeMsg integerValue] == 1) {
-    message = [messageReceived substringFromIndex:32];
-    emisorId = [messageReceived substringFromIndex:16];
+    message = [messageReceived substringFromIndex:kIndexStarMsgForType1];
+    emisorId = [messageReceived substringFromIndex:kIndexStartEmisorForType1];
   } else {
-    message = [messageReceived substringFromIndex:48];
-    emisorId = [messageReceived substringFromIndex:32];
+    message = [messageReceived substringFromIndex:kIndexStarMsgForType2];
+    emisorId = [messageReceived substringFromIndex:kIndexStartEmisorForType2];
   }
   NSLog(@"didUpdateValueForChar: Value: %@", message);
   

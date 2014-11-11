@@ -14,7 +14,7 @@
 #define TELEPHATY_SERVICE_UUID        @"00001101-0000-1000-8000-00805F9B34FB"
 #define TELEPHATY_CHARACTERISTIC_UUID @"00001101-0000-1000-8000-00805F9B34FA"
 
-typedef NS_ENUM(NSInteger, TypeMessage) {
+typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   typeMessageNoUsed,
   typeMessageBroadcast,
@@ -33,6 +33,8 @@ typedef NS_ENUM(NSInteger, TypeMessage) {
  *  KNTelephatyPeripheralService
  */
 @property (copy, nonatomic, readonly) KNTelephatyPeripheralService *peripheralService;
+
+@property (nonatomic, strong) NSDateFormatter *formatter;
 
 @end
 
@@ -77,6 +79,17 @@ typedef NS_ENUM(NSInteger, TypeMessage) {
   
 }
 
+- (NSDateFormatter *)formatter{
+  
+  if (!_formatter) {
+    _formatter = [[NSDateFormatter alloc] init];
+    _formatter.dateFormat = @"ddMMyyyyHHmmss";
+    
+  }
+  return _formatter;
+  
+}
+
 #pragma mark - Public methods
 
 - (void)startWatch {
@@ -101,7 +114,9 @@ typedef NS_ENUM(NSInteger, TypeMessage) {
 }
 
 - (void)sendMessage:(NSString *)message {
-  NSString *messageToSend = [NSString stringWithFormat:@"%@|%@", self.identifier, message];
+  
+  NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@", @(typeMessageBroadcast),dateStr, 8, self.identifier, message];
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
 }
 

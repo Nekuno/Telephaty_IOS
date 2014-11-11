@@ -18,7 +18,6 @@
 #pragma mark - Properties
 
 @property (copy, nonatomic, readonly) NSString *identifier;
-
 @property (weak, nonatomic) id <KNTelephatyServiceDelegate> delegateService;
 
 #pragma mark - Public methods

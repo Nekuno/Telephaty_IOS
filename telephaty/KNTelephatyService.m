@@ -14,6 +14,14 @@
 #define TELEPHATY_SERVICE_UUID        @"00001101-0000-1000-8000-00805F9B34FB"
 #define TELEPHATY_CHARACTERISTIC_UUID @"00001101-0000-1000-8000-00805F9B34FA"
 
+typedef NS_ENUM(NSInteger, TypeMessage) {
+  
+  typeMessageNoUsed,
+  typeMessageBroadcast,
+  typeMessageDirect
+  
+};
+
 @interface KNTelephatyService() <KNTelephatyCentralServiceDelegate>
 
 /**
@@ -35,7 +43,9 @@
 @synthesize identifier = _identifier;
 - (NSString *)identifier {
   if (!_identifier) {
-    _identifier = [[NSUUID UUID] UUIDString];
+    _identifier = [[UIDevice currentDevice] identifierForVendor].UUIDString;
+    _identifier = [_identifier stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    _identifier = [_identifier substringFromIndex:16];
   }
   
   return _identifier;

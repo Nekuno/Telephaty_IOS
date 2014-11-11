@@ -50,6 +50,7 @@
 #pragma mark - Properties
 
 @synthesize mainStoryboard = _mainStoryboard;
+
 - (UIStoryboard *)mainStoryboard {
   // Init
   if (!_mainStoryboard) {
@@ -61,6 +62,7 @@
 }
 
 @synthesize telephatyService = _telephatyService;
+
 - (KNTelephatyService *)telephatyService {
   static dispatch_once_t onceToken;
   
@@ -72,6 +74,7 @@
 }
 
 @synthesize coreDataService = _coreDataService;
+
 - (KNCoreDataService *)coreDataService {
   static dispatch_once_t onceToken;
   

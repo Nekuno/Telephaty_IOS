@@ -11,6 +11,9 @@
 #import "KNCoreDataService.h"
 #import "MessageDataUtils.h"
 
+
+static const NSInteger kInitialNumbersOfJumps     = 8;
+
 @interface KNMessagesViewController () <KNTelephatyServiceDelegate>
 
 @property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;
@@ -119,7 +122,7 @@
                                                                 text:text];
   
   if (button) {
-    [[AppDelegate sharedDelegate].telephatyService sendMessage:text withJumps:8];
+    [[AppDelegate sharedDelegate].telephatyService sendMessage:text withJumps:kInitialNumbersOfJumps];
   }  
   
   [self.messages addObject:message];
@@ -385,7 +388,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
   } else {
     
     if (buttonIndex == 1) {
-      [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:8 to:_messageSelected.senderId];
+      [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
       _messageSelected = nil;
     }
   }

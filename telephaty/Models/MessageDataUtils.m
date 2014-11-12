@@ -68,6 +68,22 @@ static NSString *const ItemMDEntityName = @"MessageData";
 }
 
 
++ (void)clearMessagesFromDataBaseOlderSiceFromNow:(NSTimeInterval)since{
+  
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
+  NSArray *messages = [self fetchMessagesInMOC:moc];
+  
+  for (MessageData *msg in messages) {
+    
+    NSTimeInterval distanceBetweenDates = [[NSDate date] timeIntervalSinceDate:msg.created];
+    if (distanceBetweenDates > since ) {
+       [moc deleteObject:msg];
+    }
+  }
+  
+}
+
+
 
 + (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter{
   

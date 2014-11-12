@@ -22,4 +22,6 @@
 + (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter;
 
 + (void)clearAllMessagesFromDataBase;
+
++ (void)clearMessagesFromDataBaseOlderSiceFromNow:(NSTimeInterval)since;
 @end

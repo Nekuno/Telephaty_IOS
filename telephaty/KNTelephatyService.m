@@ -163,7 +163,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
   }
 
-  if (message.jumps > 0 && [message.type integerValue] != typeMessageDirect) {
+  if ([message.jumps integerValue] > 1 && [message.type integerValue] != typeMessageDirect) {
     [self resendMessage:message];
   }
   [self.delegateService telephatyServiceDidReceiveMessage:message];

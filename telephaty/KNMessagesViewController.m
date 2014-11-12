@@ -394,7 +394,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
         NSLog(@"Resend message:%@", _messageSelected.text);
         MessageData *msg = [MessageDataUtils fetchMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
         
-        if (msg && [msg.jumps integerValue] > 0) {
+        if (msg && [msg.jumps integerValue] > 1) {
           [[AppDelegate sharedDelegate].telephatyService resendMessage:msg];
         }
         _messageSelected = nil;

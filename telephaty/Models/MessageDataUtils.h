@@ -10,4 +10,9 @@
 
 @interface MessageDataUtils : MessageData
 
+
++ (MessageData *)addMessageInMOC:(NSManagedObjectContext *)moc withData:(NSString *)msgData;
+
++ (NSDictionary *)parseMessageData:(NSString *)msgData;
+
 @end

@@ -13,8 +13,7 @@
 #import "KNCoreDataService.h"
 #import "MessageDataUtils.h"
 
-#define TELEPHATY_SERVICE_UUID        @"00001101-0000-1000-8000-00805F9B34FB"
-#define TELEPHATY_CHARACTERISTIC_UUID @"00001101-0000-1000-8000-00805F9B34FA"
+#import "KNConfigurationService.h"
 
 typedef NS_ENUM(NSUInteger, TypeMessage) {
   
@@ -105,7 +104,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     });
   }
   
-  self.cleanTimer =  [NSTimer scheduledTimerWithTimeInterval:60
+  self.cleanTimer =  [NSTimer scheduledTimerWithTimeInterval:REMOVE_MESSAGES_OLDER_THAN_MINUTES * 60
                                                       target:self
                                                     selector:@selector(removeOldMessages:)
                                                     userInfo:nil
@@ -160,7 +159,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 
 - (void)removeOldMessages:(id)sender{
   
-  [MessageDataUtils clearMessagesFromDataBaseOlderSiceFromNow:60];
+  [MessageDataUtils clearMessagesFromDataBaseOlderSiceFromNow:REMOVE_MESSAGES_OLDER_THAN_MINUTES * 60];
    
 }
 

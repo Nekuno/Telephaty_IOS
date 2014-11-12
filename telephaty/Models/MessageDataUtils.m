@@ -8,6 +8,8 @@
 
 #import "MessageDataUtils.h"
 
+#import "KNCoreDataService.h"
+
 @implementation MessageDataUtils
 
 
@@ -44,6 +46,15 @@ static NSString *const ItemMDEntityName = @"MessageData";
   msg.created = [NSDate date];
 
   return msg;
+}
+
+
++ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date{
+  
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
+  MessageData *msg = [self fetchMessageInMOC:moc withDate:date andTransmitter:transmiter];
+  [moc deleteObject:msg];
+  
 }
 
 

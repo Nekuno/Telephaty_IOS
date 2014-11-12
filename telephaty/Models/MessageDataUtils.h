@@ -16,4 +16,6 @@
 + (NSDictionary *)parseMessageData:(NSString *)msgData;
 
 + (NSArray *)fetchMessagesInMOC:(NSManagedObjectContext *)moc;
+
++ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date;
 @end

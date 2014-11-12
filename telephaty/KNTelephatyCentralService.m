@@ -427,22 +427,20 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
   
   NSString *messageReceived = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
   
+  NSString *myIdentifier = [AppDelegate sharedDelegate].telephatyService.identifier;
   NSDictionary *msgDict = [MessageDataUtils parseMessageData:messageReceived];
-  MessageData *msgData = [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageReceived];
   
-  if (msgData) {
+  if (![myIdentifier isEqualToString:msgDict[@"]transmitter"]]) {
     
-    NSLog(@"didUpdateValueForChar: Value: %@", msgData.message);
-    
-    NSString *myIdentifier = [AppDelegate sharedDelegate].telephatyService.identifier;
-    
-    if (![myIdentifier isEqualToString:msgData.transmitter]) {
-      [self.delegateService telephatyCentralServiceDidReceiveMessage:msgData.message];
+    MessageData *msgData = [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageReceived];
+  
+    if (msgData) {
+      
+      NSLog(@"didUpdateValueForChar: Value: %@", msgData.message);
+      [self.delegateService telephatyCentralServiceDidReceiveMessage:msgData];
     }
   }
-  
 
-  
 //  NSLog(@"didUpdateValueForChar: Value: %@", characteristic.value);
 //  [self.delegate centralClient:self characteristic:characteristic didUpdateValue:characteristic.value];
 }

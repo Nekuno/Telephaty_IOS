@@ -131,7 +131,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 
 #pragma mark - KNTelephatyCentralServiceDelegate
 
-- (void)telephatyCentralServiceDidReceiveMessage:(NSString *)message {
+- (void)telephatyCentralServiceDidReceiveMessage:(MessageData *)message {
   [self.delegateService telephatyServiceDidReceiveMessage:message];
 }
 

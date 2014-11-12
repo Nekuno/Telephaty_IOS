@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class MessageData;
+
 @protocol KNTelephatyCentralServiceDelegate;
 
 @interface KNTelephatyCentralService : NSObject
@@ -37,6 +39,6 @@
 #pragma mark - KNTelephatyCentralServiceDelegate
 @protocol KNTelephatyCentralServiceDelegate <NSObject>
 
-- (void)telephatyCentralServiceDidReceiveMessage:(NSString *)message;
+- (void)telephatyCentralServiceDidReceiveMessage:(MessageData *)message;
 
 @end

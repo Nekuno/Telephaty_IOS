@@ -13,6 +13,8 @@
 
 
 static const NSInteger kInitialNumbersOfJumps     = 8;
+static const NSInteger kAlertPrivateMessage       = 90;
+static const NSInteger kAlertRemoveAllMessages    = 80;
 
 @interface KNMessagesViewController () <KNTelephatyServiceDelegate>
 
@@ -67,6 +69,8 @@ static const NSInteger kInitialNumbersOfJumps     = 8;
   self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
   self.messages = [NSMutableArray array];
   [self loadLocalMessages];
+  
+  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Clear" style:UIBarButtonItemStyleDone target:self action:@selector(clearMessages:)];
   
   // Settings of JSQMessagesViewController
   self.senderId = [[AppDelegate sharedDelegate].telephatyService identifier];
@@ -344,8 +348,16 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
   _messageSelected = self.messages[indexPath.item];
   
   [[[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"What Do you want to do?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"SEND PRIVATE MESSAGE", @"DELETE",@"RESEND", nil] show];
+}
+
+
+#pragma mark - Actions
+
+- (void)clearMessages:(id)sender{
   
-  
+  UIAlertView *alert =   [[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"Are you sure, you want remove all messages from Data Base? This action is not reversible" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+  alert.tag = kAlertRemoveAllMessages;
+  [alert show];
 }
 
 
@@ -367,6 +379,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
       case 1: {
         UIAlertView *alert =   [[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"Write your private message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"SEND MESSAGE", nil];
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        alert.tag = kAlertPrivateMessage;
         [alert show];
         break;
       }
@@ -379,6 +392,11 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
       }
       case 3: {
         NSLog(@"Resend message:%@", _messageSelected.text);
+        MessageData *msg = [MessageDataUtils fetchMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
+        
+        if (msg && [msg.jumps integerValue] > 0) {
+          [[AppDelegate sharedDelegate].telephatyService resendMessage:msg];
+        }
         _messageSelected = nil;
         break;
       }
@@ -388,7 +406,15 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
   } else {
     
     if (buttonIndex == 1) {
-      [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
+      if (alertView.tag == kAlertRemoveAllMessages) {
+        
+        [self.messages removeAllObjects];
+        [self.collectionView reloadData];
+        [MessageDataUtils clearAllMessagesFromDataBase];
+        
+      } else {
+        [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
+      }
       _messageSelected = nil;
     }
   }

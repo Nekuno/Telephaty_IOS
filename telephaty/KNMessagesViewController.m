@@ -47,19 +47,14 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
 - (void)loadLocalMessages{
   
   NSArray *localMsgs = [MessageDataUtils fetchMessagesInMOC:[[KNCoreDataService sharedInstance] managedObjectContext]];
-  
-  NSInteger currentNumMessages = [self.messages count];
-  
-  [localMsgs enumerateObjectsUsingBlock:^(MessageData *msg, NSUInteger idx, BOOL *stop) {
+
+  for (MessageData *msg  in localMsgs) {
     JSQTextMessage *message = [[JSQTextMessage alloc] initWithSenderId:msg.transmitter
                                                      senderDisplayName:@""
                                                                   date:[self.dateformatter dateFromString:msg.date]
                                                                   text:msg.message];
     [self.messages addObject:message];
-    if (idx == [localMsgs count] - currentNumMessages) {
-      *stop=YES;
-    }
-  }];
+  }
   
 }
 
@@ -91,6 +86,17 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
   self.incomingBubbleImageData = [bubbleFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleGreenColor]];
   
   [[AppDelegate sharedDelegate].telephatyService setDelegateService:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+  [super viewWillAppear:animated];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUI:) name:kNotificationRemovedOldMessages object:nil];
+  
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+  [super viewWillDisappear:animated];
+  [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationRemovedOldMessages object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -358,6 +364,14 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
   UIAlertView *alert =   [[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"Are you sure, you want remove all messages from Data Base? This action is not reversible" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
   alert.tag = kAlertRemoveAllMessages;
   [alert show];
+}
+
+- (void)updateUI:(id)sender{
+  
+  [self.messages removeAllObjects];
+  [self loadLocalMessages];
+  [self.collectionView reloadData];
+  
 }
 
 

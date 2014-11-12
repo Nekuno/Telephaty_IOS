@@ -12,7 +12,6 @@
 
 @implementation MessageDataUtils
 
-
 static const NSInteger kIndexStartEmisorForType1     = 16.0;
 static const NSInteger kIndexStartEmisorForType2     = 32.0;
 static const NSInteger kIndexStarMsgForType1         = 32.0;
@@ -72,13 +71,19 @@ static NSString *const ItemMDEntityName = @"MessageData";
   
   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
   NSArray *messages = [self fetchMessagesInMOC:moc];
+  BOOL sendNotification = NO;
   
   for (MessageData *msg in messages) {
     
     NSTimeInterval distanceBetweenDates = [[NSDate date] timeIntervalSinceDate:msg.created];
     if (distanceBetweenDates > since ) {
        [moc deleteObject:msg];
+       sendNotification = YES;
     }
+  }
+  
+  if (sendNotification) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationRemovedOldMessages object:nil];
   }
   
 }

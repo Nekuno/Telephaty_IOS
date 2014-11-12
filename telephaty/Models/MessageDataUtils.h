@@ -8,6 +8,8 @@
 
 #import "MessageData.h"
 
+static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMessages";
+
 @interface MessageDataUtils : MessageData
 
 

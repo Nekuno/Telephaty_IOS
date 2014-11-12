@@ -153,6 +153,16 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 
 - (void)telephatyCentralServiceDidReceiveMessage:(MessageData *)message {
   
+  if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+    
+    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    localNotification.alertBody = message.message;
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+  }
+
   if (message.jumps > 0 && [message.type integerValue] != typeMessageDirect) {
     [self resendMessage:message];
   }

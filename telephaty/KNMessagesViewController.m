@@ -8,7 +8,7 @@
 
 #import "KNMessagesViewController.h"
 
-@interface KNMessagesViewController () <UIActionSheetDelegate, KNTelephatyServiceDelegate>
+@interface KNMessagesViewController () <KNTelephatyServiceDelegate>
 
 @property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;
 
@@ -23,6 +23,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
   self.messages = [NSMutableArray array];
   
   // Settings of JSQMessagesViewController
@@ -84,49 +85,6 @@
   }  
   
   [self.messages addObject:message];
-  [self finishSendingMessage];
-}
-
-- (void)didPressAccessoryButton:(UIButton *)sender {
-  UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Media messages"
-                                                     delegate:self
-                                            cancelButtonTitle:@"Cancel"
-                                       destructiveButtonTitle:nil
-                                            otherButtonTitles:@"Send photo", @"Send location", @"Send video", nil];
-  
-  [sheet showFromToolbar:self.inputToolbar];
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-  return;
-  
-  if (buttonIndex == actionSheet.cancelButtonIndex) {
-    return;
-  }
-  
-  switch (buttonIndex) {
-    case 0:
-//      [self.demoData addPhotoMediaMessage];
-      break;
-      
-    case 1:
-//    {
-//      __weak UICollectionView *weakView = self.collectionView;
-//      
-//      [self.demoData addLocationMediaMessageCompletion:^{
-//        [weakView reloadData];
-//      }];
-//    }
-      break;
-      
-    case 2:
-//      [self.demoData addVideoMediaMessage];
-      break;
-  }
-  
-  [JSQSystemSoundPlayer jsq_playMessageSentSound];
   [self finishSendingMessage];
 }
 

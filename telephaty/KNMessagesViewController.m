@@ -377,11 +377,11 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
         [self.collectionView reloadData];
         break;
       }
-      case 3:
+      case 3: {
         NSLog(@"Resend message:%@", _messageSelected.text);
         _messageSelected = nil;
         break;
-        
+      }
       default:
         break;
     }

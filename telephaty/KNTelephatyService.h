@@ -32,6 +32,8 @@
 
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to;
 
+- (void)resendMessage:(MessageData *)message;
+
 @end
 
 #pragma mark - KNTelephatyServiceDelegate

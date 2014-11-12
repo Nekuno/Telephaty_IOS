@@ -20,7 +20,10 @@
 
 @end
 
-@implementation KNMessagesViewController
+@implementation KNMessagesViewController {
+  
+  JSQMessage *_messageSelected;
+}
 
 #pragma mark - Lifecycle
 
@@ -116,7 +119,7 @@
                                                                 text:text];
   
   if (button) {
-    [[AppDelegate sharedDelegate].telephatyService sendMessage:text];
+    [[AppDelegate sharedDelegate].telephatyService sendMessage:text withJumps:8];
   }  
   
   [self.messages addObject:message];
@@ -333,35 +336,59 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark - Responding to collection view tap events
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
-                header:(JSQMessagesLoadEarlierHeaderView *)headerView
-didTapLoadEarlierMessagesButton:(UIButton *)sender {
-    [self loadLocalMessages];
-    headerView.loadButton.enabled = NO;
-    [self.collectionView reloadData];
-}
-
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView
- didTapAvatarImageView:(UIImageView *)avatarImageView
-           atIndexPath:(NSIndexPath *)indexPath {
-  NSLog(@"Tapped avatar!");
-}
-
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView
 didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
-  NSLog(@"Tapped message bubble!");
+  
+  _messageSelected = self.messages[indexPath.item];
+  
+  [[[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"What Do you want to do?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"SEND PRIVATE MESSAGE", @"DELETE",@"RESEND", nil] show];
+  
+  
 }
 
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView
- didTapCellAtIndexPath:(NSIndexPath *)indexPath
-         touchLocation:(CGPoint)touchLocation {
-  NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
-}
 
 #pragma mark - KNTelephatyServiceDelegate
 
 - (void)telephatyServiceDidReceiveMessage:(MessageData *)message {
   
   [self didPressSendButton:nil withMessageText:message.message senderId:message.transmitter senderDisplayName:@"" date:[self.dateformatter dateFromString:message.date]];
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex{
+  
+  if (alertView.numberOfButtons == 4) {
+    
+    switch (buttonIndex) {
+      case 1: {
+        UIAlertView *alert =   [[UIAlertView alloc] initWithTitle:@"Telephaty" message:@"Write your private message" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"SEND MESSAGE", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert show];
+        break;
+      }
+      case 2: {
+        [self.messages removeObject:_messageSelected];
+        [MessageDataUtils deleteMessageFromTransmitter:_messageSelected.senderId onDate:[self.dateformatter stringFromDate:_messageSelected.date]];
+        _messageSelected = nil;
+        [self.collectionView reloadData];
+        break;
+      }
+      case 3:
+        NSLog(@"Resend message:%@", _messageSelected.text);
+        _messageSelected = nil;
+        break;
+        
+      default:
+        break;
+    }
+  } else {
+    
+    if (buttonIndex == 1) {
+      [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:8 to:_messageSelected.senderId];
+      _messageSelected = nil;
+    }
+  }
 }
 
 @end

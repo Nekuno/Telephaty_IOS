@@ -15,4 +15,5 @@
 
 + (NSDictionary *)parseMessageData:(NSString *)msgData;
 
++ (NSArray *)fetchMessagesInMOC:(NSManagedObjectContext *)moc;
 @end

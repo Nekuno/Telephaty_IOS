@@ -57,11 +57,21 @@ static NSString *const ItemMDEntityName = @"MessageData";
   NSError *error;
   NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
   if ([results count] != 0) {
-    NSAssert(([results count] == 1), @"More than one group with the same identifier exist.");
+    NSAssert(([results count] == 1), @"More than one msg with the same date and transmitter id  exist.");
     msgData = [results objectAtIndex:0];
   }
   return msgData;
 
+}
+
++ (NSArray *)fetchMessagesInMOC:(NSManagedObjectContext *)moc{
+  
+  NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
+
+  NSError *error;
+  NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
+  return results;
+  
 }
 
 + (NSFetchRequest *)prepareMessageDataInMOC:(NSManagedObjectContext *)moc {

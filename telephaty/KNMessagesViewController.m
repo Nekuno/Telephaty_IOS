@@ -8,11 +8,15 @@
 
 #import "KNMessagesViewController.h"
 
+#import "KNCoreDataService.h"
+#import "MessageDataUtils.h"
+
 @interface KNMessagesViewController () <KNTelephatyServiceDelegate>
 
 @property (strong, nonatomic) JSQMessagesBubbleImage *outgoingBubbleImageData;
-
 @property (strong, nonatomic) JSQMessagesBubbleImage *incomingBubbleImageData;
+
+@property (nonatomic, strong) NSDateFormatter *dateformatter;
 
 @end
 
@@ -20,18 +24,49 @@
 
 #pragma mark - Lifecycle
 
+
+- (NSDateFormatter *)dateformatter{
+  
+  if (!_dateformatter) {
+    _dateformatter = [[NSDateFormatter alloc] init];
+    _dateformatter.dateFormat = @"ddMMyyyyHHmmss";
+    
+  }
+  return _dateformatter;
+  
+}
+
+- (void)loadLocalMessages{
+  
+  NSArray *localMsgs = [MessageDataUtils fetchMessagesInMOC:[[KNCoreDataService sharedInstance] managedObjectContext]];
+  
+  NSInteger currentNumMessages = [self.messages count];
+  
+  [localMsgs enumerateObjectsUsingBlock:^(MessageData *msg, NSUInteger idx, BOOL *stop) {
+    JSQTextMessage *message = [[JSQTextMessage alloc] initWithSenderId:msg.transmitter
+                                                     senderDisplayName:@""
+                                                                  date:[self.dateformatter dateFromString:msg.date]
+                                                                  text:msg.message];
+    [self.messages addObject:message];
+    if (idx == [localMsgs count] - currentNumMessages) {
+      *stop=YES;
+    }
+  }];
+  
+}
+
 - (void)viewDidLoad {
   [super viewDidLoad];
   
   self.inputToolbar.contentView.leftBarButtonItem.hidden = YES;
   self.messages = [NSMutableArray array];
+  [self loadLocalMessages];
   
   // Settings of JSQMessagesViewController
   self.senderId = [[AppDelegate sharedDelegate].telephatyService identifier];
   self.senderDisplayName = @"Telephaty_user";
   self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
   self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
-  self.showLoadEarlierMessagesHeader = YES;
   self.automaticallyScrollsToMostRecentMessage = YES;
   
   /**
@@ -300,7 +335,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath {
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
                 header:(JSQMessagesLoadEarlierHeaderView *)headerView
 didTapLoadEarlierMessagesButton:(UIButton *)sender {
-  NSLog(@"Load earlier messages!");
+    [self loadLocalMessages];
+    headerView.loadButton.enabled = NO;
+    [self.collectionView reloadData];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView

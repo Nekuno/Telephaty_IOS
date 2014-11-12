@@ -116,8 +116,12 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 }
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps{
   
+  NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
+  NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
+  
+  
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@", @(typeMessageBroadcast),dateStr, jumps, self.identifier, message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, message];
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
@@ -126,17 +130,32 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to{
   
+  NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
+  NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
+  
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@%@", @(typeMessageDirect),dateStr, jumps,to, self.identifier, message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, message];
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void)resendMessage:(MessageData *)message{
+  
+  NSInteger jumps = [message.jumps integerValue] -1;
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),message.date, (long)jumps, message.transmitter, message.message];
+  [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
+  
+}
+
 #pragma mark - KNTelephatyCentralServiceDelegate
 
 - (void)telephatyCentralServiceDidReceiveMessage:(MessageData *)message {
+  
+  if (message.jumps > 0 && [message.type integerValue] != typeMessageDirect) {
+    [self resendMessage:message];
+  }
   [self.delegateService telephatyServiceDidReceiveMessage:message];
 }
 

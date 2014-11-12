@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #import "KNTelephatyService.h"
-#import "KNCoreDataService.h"
 
 #define COLOR_TINT [UIColor colorWithRed:0.0f/255.0f green:121.0f/255.0f blue:255.0f/255.0f alpha:1.0f]
 
@@ -32,10 +31,6 @@
  */
 @property (strong, nonatomic, readonly) KNTelephatyService *telephatyService;
 
-/**
- *  KNCoreDataService
- */
-@property (strong, nonatomic, readonly) KNCoreDataService *coreDataService;
 
 #pragma mark - Class methods
 

@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
  */
 @property (copy, nonatomic, readonly) KNTelephatyPeripheralService *peripheralService;
 
+@property (nonatomic, strong) NSTimer *cleanTimer;
+
 @property (nonatomic, strong) NSDateFormatter *formatter;
 
 @end
@@ -100,11 +102,15 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
       [this.centralService connect];
-//      [this.centralService subscribe];
     });
   }
+  
+  self.cleanTimer =  [NSTimer scheduledTimerWithTimeInterval:60
+                                                      target:self
+                                                    selector:@selector(removeOldMessages:)
+                                                    userInfo:nil
+                                                    repeats:YES];
 }
-
 - (void)startEmit {
   if (self.peripheralService) {
     __weak typeof (self) this = self;
@@ -147,6 +153,15 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),message.date, (long)jumps, message.transmitter, message.message];
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
   
+}
+
+
+#pragma mark - Private Methods
+
+- (void)removeOldMessages:(id)sender{
+  
+  [MessageDataUtils clearMessagesFromDataBaseOlderSiceFromNow:60];
+   
 }
 
 #pragma mark - KNTelephatyCentralServiceDelegate

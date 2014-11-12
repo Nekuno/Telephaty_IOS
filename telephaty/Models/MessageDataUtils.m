@@ -57,6 +57,16 @@ static NSString *const ItemMDEntityName = @"MessageData";
   
 }
 
++ (void)clearAllMessagesFromDataBase{
+  
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
+  NSArray *messages = [self fetchMessagesInMOC:moc];
+
+  for (MessageData *msg in messages) {
+    [moc deleteObject:msg];
+  }
+}
+
 
 
 + (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter{
@@ -124,5 +134,7 @@ static NSString *const ItemMDEntityName = @"MessageData";
   return msgDict;
   
 }
+
+
 
 @end

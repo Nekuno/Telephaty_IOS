@@ -20,4 +20,6 @@
 + (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date;
 
 + (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter;
+
++ (void)clearAllMessagesFromDataBase;
 @end

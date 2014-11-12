@@ -15,12 +15,6 @@
 @interface KNCoreDataService()
 
 /**
- *  Returns the managed object context for the application.
- If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
- */
-@property (strong, nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
-
-/**
  *  Returns the managed object model for the application.
  If the model doesn't already exist, it is created from the application's model.
  */
@@ -38,6 +32,19 @@
  *  KNCoreDataService
  */
 @implementation KNCoreDataService
+
+
+#pragma mark - Singleton
+
++ (id)sharedInstance {
+  static dispatch_once_t once;
+  static KNCoreDataService *sharedInstance;
+  dispatch_once(&once, ^{
+    sharedInstance = [[super alloc] init];
+  });
+  
+  return sharedInstance;
+}
 
 #pragma mark - Properties
 
@@ -118,7 +125,7 @@
   return _persistentStoreCoordinator;
 }
 
-#pragma mark - Private
+
 - (void)saveContext {
   NSError *error = nil;
   NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
@@ -132,6 +139,8 @@
     }
   }
 }
+
+#pragma mark - Private
 
 - (NSURL *)applicationDocumentsDirectory {
   return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];

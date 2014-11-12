@@ -114,19 +114,24 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     });
   }
 }
-
-- (void)sendMessage:(NSString *)message {
+- (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps{
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@", @(typeMessageBroadcast),dateStr, 8, self.identifier, message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@", @(typeMessageBroadcast),dateStr, jumps, self.identifier, message];
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
-- (void)sendMessage:(NSString *)message to:(NSString *)to {
-  // TODO: send message to destination
+- (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to{
+  
+  NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@%@", @(typeMessageDirect),dateStr, jumps,to, self.identifier, message];
+  
+  [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+  
+  [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 #pragma mark - KNTelephatyCentralServiceDelegate

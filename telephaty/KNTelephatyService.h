@@ -28,9 +28,9 @@
 
 - (void)startEmit;
 
-- (void)sendMessage:(NSString *)message;
+- (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps;
 
-- (void)sendMessage:(NSString *)message to:(NSString *)to;
+- (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to;
 
 @end
 

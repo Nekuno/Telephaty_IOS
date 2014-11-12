@@ -36,14 +36,34 @@
 
 #pragma mark - Singleton
 
+  static KNCoreDataService *sharedInstance;
+
 + (id)sharedInstance {
   static dispatch_once_t once;
-  static KNCoreDataService *sharedInstance;
   dispatch_once(&once, ^{
-    sharedInstance = [[super alloc] init];
+    sharedInstance = [[KNCoreDataService alloc] init];
   });
   
   return sharedInstance;
+}
+
++ (id)alloc
+{
+  @synchronized(self)
+  {
+    NSAssert(sharedInstance == nil, @"Attempted to allocate a second instance of a singleton KNCoreDataService.");
+    sharedInstance = [super alloc];
+  }
+  
+  return sharedInstance;
+}
+
+- (id) init
+{
+  if ((self = [super init])){
+    //
+  }
+  return self;
 }
 
 #pragma mark - Properties

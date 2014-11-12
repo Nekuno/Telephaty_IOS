@@ -432,12 +432,21 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
   
   if (![myIdentifier isEqualToString:msgDict[@"]transmitter"]]) {
     
-    MessageData *msgData = [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageReceived];
-  
-    if (msgData) {
+    if ([msgDict[@"type"] isEqualToString:@"1"]) {
+      MessageData *msgData = [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageReceived];
       
-      NSLog(@"didUpdateValueForChar: Value: %@", msgData.message);
-      [self.delegateService telephatyCentralServiceDidReceiveMessage:msgData];
+      if (msgData) {
+        [self.delegateService telephatyCentralServiceDidReceiveMessage:msgData];
+      }
+    } else {
+      
+      if ([msgDict[@"receiver"] isEqualToString:myIdentifier]) {
+        MessageData *msgData = [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageReceived];
+        
+        if (msgData) {
+          [self.delegateService telephatyCentralServiceDidReceiveMessage:msgData];
+        }
+      }
     }
   }
 

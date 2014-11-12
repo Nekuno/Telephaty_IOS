@@ -10,6 +10,8 @@
 
 #import "KNTelephatyCentralService.h"
 #import "KNTelephatyPeripheralService.h"
+#import "KNCoreDataService.h"
+#import "MessageDataUtils.h"
 
 #define TELEPHATY_SERVICE_UUID        @"00001101-0000-1000-8000-00805F9B34FB"
 #define TELEPHATY_CHARACTERISTIC_UUID @"00001101-0000-1000-8000-00805F9B34FA"
@@ -117,6 +119,9 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
   NSString *messageToSend = [NSString stringWithFormat:@"%@%@%d%@%@", @(typeMessageBroadcast),dateStr, 8, self.identifier, message];
+  
+  [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+  
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
 }
 

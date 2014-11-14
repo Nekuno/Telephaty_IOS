@@ -2,8 +2,8 @@
 //  KNMessagesViewController.h
 //  Telephaty
 //
-//  Created by Eduardo Palenzuela Darias on 23/10/14.
-//  Copyright (c) 2014 kiliannet. All rights reserved.
+//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
+//  Copyright (c) 2014. All rights reserved.
 //
 
 #import "JSQMessages.h"

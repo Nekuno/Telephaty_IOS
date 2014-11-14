@@ -1,6 +1,6 @@
 //
 //  MessageData.m
-//  Pods
+//  Telephaty
 //
 //  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
 //

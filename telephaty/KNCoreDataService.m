@@ -2,8 +2,8 @@
 //  KNCoreDataService.m
 //  Telephaty
 //
-//  Created by Eduardo K. Palenzuela Darias on 15/10/14.
-//  Copyright (c) 2014 kiliannet. All rights reserved.
+//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
+//  Copyright (c) 2014. All rights reserved.
 //
 
 #import "KNCoreDataService.h"

@@ -27,7 +27,7 @@ static NSString *const ItemMDEntityName = @"MessageData";
   
   NSDictionary *msgDict = [self parseMessageData:msgData];
   
-  MessageData *msg = [self fetchMessageInMOC:moc withDate:msgDict[@"date"] andTransmitter:msgDict[@"transmitter"]];
+  MessageData *msg = [self fetchMessageInDBWithDate:msgDict[@"date"] andTransmitter:msgDict[@"transmitter"]];
   
   if (msg) {
     return nil;
@@ -50,8 +50,8 @@ static NSString *const ItemMDEntityName = @"MessageData";
 
 + (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date{
   
-  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
-  MessageData *msg = [self fetchMessageInMOC:moc withDate:date andTransmitter:transmiter];
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
+  MessageData *msg = [self fetchMessageInDBWithDate:date andTransmitter:transmiter];
   [moc deleteObject:msg];
   
 }
@@ -59,7 +59,7 @@ static NSString *const ItemMDEntityName = @"MessageData";
 + (void)clearAllMessagesFromDataBase{
   
   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
-  NSArray *messages = [self fetchMessagesInMOC:moc];
+  NSArray *messages = [self fetchMessagesInMoc:moc];
 
   for (MessageData *msg in messages) {
     [moc deleteObject:msg];
@@ -70,15 +70,15 @@ static NSString *const ItemMDEntityName = @"MessageData";
 + (void)clearMessagesFromDataBaseOlderSiceFromNow:(NSTimeInterval)since{
   
   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] managedObjectContext];
-  NSArray *messages = [self fetchMessagesInMOC:moc];
+  NSArray *messages = [self fetchMessagesInMoc:moc];
   BOOL sendNotification = NO;
   
   for (MessageData *msg in messages) {
     
     NSTimeInterval distanceBetweenDates = [[NSDate date] timeIntervalSinceDate:msg.created];
     if (distanceBetweenDates > since ) {
-       [moc deleteObject:msg];
-       sendNotification = YES;
+      [moc deleteObject:msg];
+      sendNotification = YES;
     }
   }
   
@@ -90,9 +90,10 @@ static NSString *const ItemMDEntityName = @"MessageData";
 
 
 
-+ (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter{
++ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter{
   
   MessageData *msgData;
+   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
   NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
   fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date == %@ AND transmitter = %@", date, transmitter];
 
@@ -106,10 +107,16 @@ static NSString *const ItemMDEntityName = @"MessageData";
 
 }
 
-+ (NSArray *)fetchMessagesInMOC:(NSManagedObjectContext *)moc{
++ (NSArray *)fetchMessagesInDB{
   
-  NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
+  return [self fetchMessagesInMoc:moc];
+}
 
++ (NSArray *)fetchMessagesInMoc:(NSManagedObjectContext *)moc{
+
+  NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
+  
   NSError *error;
   NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
   return results;

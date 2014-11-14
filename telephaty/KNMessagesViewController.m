@@ -8,7 +8,6 @@
 
 #import "KNMessagesViewController.h"
 
-#import "KNCoreDataService.h"
 #import "MessageDataUtils.h"
 
 
@@ -46,8 +45,7 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
 
 - (void)loadLocalMessages{
   
-  NSArray *localMsgs = [MessageDataUtils fetchMessagesInMOC:[[KNCoreDataService sharedInstance] managedObjectContext]];
-
+  NSArray *localMsgs = [MessageDataUtils fetchMessagesInDB];
   for (MessageData *msg  in localMsgs) {
     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:msg.transmitter
                                                      senderDisplayName:@""
@@ -291,7 +289,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
       }
       case 3: {      
         NSLog(@"Resend message:%@", _messageSelected.text);
-        MessageData *msg = [MessageDataUtils fetchMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
+        MessageData *msg = [MessageDataUtils fetchMessageInDBWithDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
         
         if (msg && [msg.jumps integerValue] > 1) {
           [[AppDelegate sharedDelegate].telephatyService resendMessage:msg];

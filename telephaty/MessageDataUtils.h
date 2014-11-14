@@ -41,13 +41,11 @@ static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMes
 /**
  *  Return all messages in Data Base
  *
- *  @param moc ManageObjectContext.
-
  *  @return Array with all objects MessageData in DB
  *
  *  @discussion if the DB is empty, return nil.
  */
-+ (NSArray *)fetchMessagesInMOC:(NSManagedObjectContext *)moc;
++ (NSArray *)fetchMessagesInDB;
 
 /**
  *  Delete a message from Data Base
@@ -60,13 +58,12 @@ static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMes
 /**
  *  Recover and specific message
  *
- *  @param moc ManageObjectContext.
  *  @param date Date of message to retirve.
  *  @param transmiter ID of device which sent the initial message.
  *
  *  @return return a MeeageData instance, if it's not found it, return nil.
  */
-+ (MessageData *)fetchMessageInMOC:(NSManagedObjectContext *)moc withDate:(NSString *)date andTransmitter:(NSString *)transmitter;
++ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter;
 
 /**
  *  Delete all messages in DB

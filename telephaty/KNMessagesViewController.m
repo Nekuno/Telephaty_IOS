@@ -404,7 +404,7 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
         [self.collectionView reloadData];
         break;
       }
-      case 3: {
+      case 3: {      
         NSLog(@"Resend message:%@", _messageSelected.text);
         MessageData *msg = [MessageDataUtils fetchMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
         

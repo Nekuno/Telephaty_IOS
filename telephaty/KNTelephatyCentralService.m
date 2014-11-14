@@ -64,8 +64,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
     self.connectWhenReady = YES;
     return;
   }
-  
+#if DEBUG
   NSLog(@"Scanning ...");
+#endif  
   [self startScanningTimeoutMonitor];
   
   // By turning on allow duplicates, it allows us to scan more reliably, but
@@ -124,7 +125,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 // Once connected, subscribes to all the charactersitics that are subscribe-able.
 - (void)subscribe {
   if (!self.connectedService) {
+#if DEBUG
     NSLog(@"No connected services for peripheral at all. Unable to subscribe");
+#endif
     return;
   }
   
@@ -213,9 +216,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 }
 
 - (void)connectionDidTimeout:(CBPeripheral *)peripheral {
+#if DEBUG
   NSLog(@"connectionDidTimeout: %@", peripheral.identifier);
-//  NSError *error = [[self class] errorWithDescription:@"Unable to connect to BTLE device."];
-//  [self.delegate centralClient:self connectDidFail:error];
+#endif
   [self.centralManager cancelPeripheralConnection:peripheral];
 }
 
@@ -235,12 +238,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 }
 
 - (void)requestDidTimeout:(CBCharacteristic *)characteristic {
+#if DEBUG
   NSLog(@"requestDidTimeout: %@", characteristic);
-//  NSError *error = [[self class] errorWithDescription:@"Unable to request data from BTLE device."];
-//  
-//  [self.delegate centralClient:self
-//      requestForCharacteristic:characteristic
-//                       didFail:error];
+#endif
   
   [self.connectedPeripheral setNotifyValue:NO forCharacteristic:characteristic];
 }
@@ -263,7 +263,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
       }
       break;
     default:
+#if DEBUG
       NSLog(@"centralManager did update: %d", central.state);
+#endif
       break;
   }
 }
@@ -274,11 +276,13 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
                   RSSI:(NSNumber *)RSSI {
   
   CBUUID *peripheralUUID = [CBUUID UUIDWithCFUUID:(__bridge CFUUIDRef)(peripheral.identifier)];
+#if DEBUG
   NSLog(@"didDiscoverPeripheral: Peripheral CFUUID: %@", peripheral.identifier);
   NSLog(@"didDiscoverPeripheral: Peripheral CBUUID: %@", peripheralUUID);
   NSLog(@"didDiscoverPeripheral: Name: %@", peripheral.name);
   NSLog(@"didDiscoverPeripheral: Advertisment Data: %@", advertisementData);
   NSLog(@"didDiscoverPeripheral: RSSI: %@", RSSI);
+#endif
   
   BOOL foundSuitablePeripheral = NO;
   
@@ -319,7 +323,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
   if (foundSuitablePeripheral) {
     [self cancelScanningTimeoutMonitor];
     [self.centralManager stopScan];
+#if DEBUG
     NSLog(@"Connecting ... %@", peripheralUUID);
+#endif
     [self.centralManager connectPeripheral:peripheral options:nil];
     
     // !!! NOTE: If you don't retain the CBPeripheral during the connection,
@@ -330,7 +336,9 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 }
 
 - (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+#if DEBUG
   NSLog(@"didConnect: %@", peripheral.name);
+#endif
   [self cancelConnectionTimeoutMonitor:peripheral];
   self.connectedPeripheral = peripheral;
   [self discoverServices:peripheral];
@@ -339,9 +347,10 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 - (void)centralManager:(CBCentralManager *)central
 didFailToConnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error {
+#if DEBUG
   NSLog(@"failedToConnect: %@", peripheral);
   [self cancelConnectionTimeoutMonitor:peripheral];
-//  [self.delegate centralClient:self connectDidFail:error];
+#endif
 }
 
 - (void)centralManager:(CBCentralManager *)central
@@ -349,26 +358,29 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error {
   self.connectedPeripheral = nil;
   self.connectedService = nil;
+#if DEBUG
   NSLog(@"peripheralDidDisconnect: %@", peripheral);
-//  [self.delegate centralClientDidDisconnect:self];
+#endif
 }
 
 #pragma mark - CBPeripheralDelegate
 
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
   if (error) {
-//    [self.delegate centralClient:self connectDidFail:error];
+#if DEBUG
     NSLog(@"didDiscoverServices: Error: %@", error);
-    // TODO: Need to deal with resetting the state at this point.
+#endif
     return;
   }
-  
+#if DEBUG
   NSLog(@"didDiscoverServices: %@ (Services Count: %ld)",
           peripheral.name, (unsigned long)peripheral.services.count);
+#endif
   
   for (CBService *service in peripheral.services) {
+#if DEBUG
     NSLog(@"didDiscoverServices: Service: %@", service.UUID);
-    
+#endif
     // Still iterate through all the services for logging purposes, but if
     // we found one, don't bother doing anything more.
     if (self.connectedService) continue;
@@ -385,15 +397,20 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
 didDiscoverCharacteristicsForService:(CBService *)service
              error:(NSError *)error {
   if (error) {
-//    [self.delegate centralClient:self connectDidFail:error];
+#if DEBUG
     NSLog(@"didDiscoverChar: Error: %@", error);
+#endif
     return;
   }
   
   // For logging, just print out all the discovered services.
+#if DEBUG
   NSLog(@"didDiscoverChar: Found %ld characteristic(s)", (unsigned long)service.characteristics.count);
+#endif
   for (CBCharacteristic *characteristic in service.characteristics) {
+#if DEBUG
     NSLog(@"didDiscoverChar:  Characteristic: %@", characteristic.UUID);
+#endif
   }
   
   // If we did discover characteristics, these will get remembered in the
@@ -402,7 +419,9 @@ didDiscoverCharacteristicsForService:(CBService *)service
   self.connectedService = service;
   
   if (service.characteristics.count < 1) {
+#if DEBUG
     NSLog(@"didDiscoverChar: did not discover any characterestics for service. aborting.");
+#endif
     [self disconnect];
     return;
   }
@@ -418,7 +437,9 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
 //  [self cancelRequestTimeoutMonitor:characteristic];
   
   if (error) {
+#if DEBUG    
     NSLog(@"didUpdateValueError: %@", error);
+#endif
     return;
   }
   

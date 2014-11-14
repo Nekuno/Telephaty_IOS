@@ -86,14 +86,18 @@
 
 - (void)sendToSubscribers:(NSData *)data {
   if (self.peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
+#if DEBUG
     NSLog(@"sendToSubscribers: peripheral not ready for sending state: %d", self.peripheralManager.state);
+#endif    
     return;
   }
   
   BOOL success = [self.peripheralManager updateValue:data forCharacteristic:self.characteristic onSubscribedCentrals:nil];
   
   if (!success) {
+#if DEBUG
     NSLog(@"Failed to send data, buffering data for retry once ready.");
+#endif
     self.pendingData = data;
     return;
   }
@@ -104,7 +108,9 @@
 }
 
 - (void)applicationWillEnterForeground {
+#if DEBUG
   NSLog(@"applicationWillEnterForeground.");
+#endif
   // I once thought that it would be good to re-advertise and re-enable
   // the services when coming in the foreground, but it does more harm than
   // good. If we do that, then if there was a Central subscribing to a
@@ -145,36 +151,48 @@
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral {
   switch (peripheral.state) {
     case CBPeripheralManagerStatePoweredOn:
+#if DEBUG
       NSLog(@"peripheralStateChange: Powered On");
+#endif
       // As soon as the peripheral/bluetooth is turned on, start initializing
       // the service.
       [self enableService];
       break;
     case CBPeripheralManagerStatePoweredOff: {
+#if DEBUG
       NSLog(@"peripheralStateChange: Powered Off");
+#endif
       [self disableService];
       self.serviceRequiresRegistration = YES;
       break;
     }
     case CBPeripheralManagerStateResetting: {
+#if DEBUG
       NSLog(@"peripheralStateChange: Resetting");
+#endif
       self.serviceRequiresRegistration = YES;
       break;
     }
     case CBPeripheralManagerStateUnauthorized: {
+#if DEBUG
       NSLog(@"peripheralStateChange: Deauthorized");
+#endif
       [self disableService];
       self.serviceRequiresRegistration = YES;
       break;
     }
     case CBPeripheralManagerStateUnsupported: {
+#if DEBUG
       NSLog(@"peripheralStateChange: Unsupported");
+#endif
       self.serviceRequiresRegistration = YES;
       // TODO: Give user feedback that Bluetooth is not supported.
       break;
     }
     case CBPeripheralManagerStateUnknown:
+#if DEBUG
       NSLog(@"peripheralStateChange: Unknown");
+#endif
       break;
     default:
       break;
@@ -184,30 +202,39 @@
 - (void)peripheralManager:(CBPeripheralManager *)peripheral
                   central:(CBCentral *)central
 didSubscribeToCharacteristic:(CBCharacteristic *)characteristic {
+#if DEBUG
   NSLog(@"didSubscribe: %@", characteristic.UUID);
   NSLog(@"didSubscribe: - Central: %@", central.identifier);
-//  [self.delegate peripheralServer:self centralDidSubscribe:central];
+#endif
+
 }
 
 - (void)peripheralManager:(CBPeripheralManager *)peripheral
                   central:(CBCentral *)central
 didUnsubscribeFromCharacteristic:(CBCharacteristic *)characteristic {
+#if DEBUG
   NSLog(@"didUnsubscribe: %@", central.identifier);
-//  [self.delegate peripheralServer:self centralDidUnsubscribe:central];
+#endif
+
 }
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral
                                        error:(NSError *)error {
   if (error) {
+#if DEBUG
     NSLog(@"didStartAdvertising: Error: %@", error);
+#endif
     return;
   }
-  
+#if DEBUG
   NSLog(@"didStartAdvertising");
+#endif
 }
 
 - (void)peripheralManagerIsReadyToUpdateSubscribers:(CBPeripheralManager *)peripheral {
+#if DEBUG
   NSLog(@"isReadyToUpdateSubscribers");
+#endif
   
   if (self.pendingData) {
     NSData *data = [self.pendingData copy];

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		A01FCB5219F9B67200ED3948 /* KNMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A01FCB5119F9B67200ED3948 /* KNMessagesViewController.m */; };
-		A064B1A119EE00300036CE47 /* ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A064B1A019EE00300036CE47 /* ionicons.ttf */; };
 		A084E26219EF93DB009CC5BB /* KNTelephatyPeripheralService.m in Sources */ = {isa = PBXBuildFile; fileRef = A084E26119EF93DB009CC5BB /* KNTelephatyPeripheralService.m */; };
 		A084E26619EF9412009CC5BB /* KNTelephatyCentralService.m in Sources */ = {isa = PBXBuildFile; fileRef = A084E26519EF9412009CC5BB /* KNTelephatyCentralService.m */; };
 		A0D2DA6519DCA71C004EB881 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D2DA6419DCA71C004EB881 /* main.m */; };
@@ -19,7 +18,6 @@
 		A0D2DA7F19DCA71C004EB881 /* TelephatyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D2DA7E19DCA71C004EB881 /* TelephatyTests.m */; };
 		A0EA12CC19E75D15003EBCEE /* KNTelephatyService.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EA12CB19E75D15003EBCEE /* KNTelephatyService.m */; };
 		A0FF2CC619EDE7A8004FE4F1 /* KNCoreDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = A0FF2CC519EDE7A8004FE4F1 /* KNCoreDataService.m */; };
-		A0FF2CD319EDFC7C004FE4F1 /* Categories.json in Resources */ = {isa = PBXBuildFile; fileRef = A0FF2CD119EDFC7C004FE4F1 /* Categories.json */; };
 		DCF0A988F80A2079BCF70019 /* libPods-Telephaty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBAE8B384CD114D6D8075544 /* libPods-Telephaty.a */; };
 		EB6AEDAF1A133E8F008C4F38 /* TelephatyDB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB6AEDAD1A133E8F008C4F38 /* TelephatyDB.xcdatamodeld */; };
 		EB6AEDB51A1340F5008C4F38 /* MessageDataUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6AEDB41A1340F5008C4F38 /* MessageDataUtils.m */; };
@@ -41,7 +39,6 @@
 		308A552687BCB96B9E07F086 /* Pods-Telephaty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telephaty.release.xcconfig"; path = "Pods/Target Support Files/Pods-Telephaty/Pods-Telephaty.release.xcconfig"; sourceTree = "<group>"; };
 		A01FCB5019F9B67200ED3948 /* KNMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KNMessagesViewController.h; sourceTree = "<group>"; };
 		A01FCB5119F9B67200ED3948 /* KNMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNMessagesViewController.m; sourceTree = "<group>"; };
-		A064B1A019EE00300036CE47 /* ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = ionicons.ttf; sourceTree = "<group>"; };
 		A080D81F19EF07B8002936ED /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		A084E26019EF93DB009CC5BB /* KNTelephatyPeripheralService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KNTelephatyPeripheralService.h; sourceTree = "<group>"; };
 		A084E26119EF93DB009CC5BB /* KNTelephatyPeripheralService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNTelephatyPeripheralService.m; sourceTree = "<group>"; };
@@ -62,7 +59,6 @@
 		A0EA12CB19E75D15003EBCEE /* KNTelephatyService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNTelephatyService.m; sourceTree = "<group>"; };
 		A0FF2CC419EDE7A8004FE4F1 /* KNCoreDataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KNCoreDataService.h; sourceTree = "<group>"; };
 		A0FF2CC519EDE7A8004FE4F1 /* KNCoreDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNCoreDataService.m; sourceTree = "<group>"; };
-		A0FF2CD119EDFC7C004FE4F1 /* Categories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Categories.json; sourceTree = "<group>"; };
 		D486498DD0602AE446217326 /* Pods-Telephaty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telephaty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telephaty/Pods-Telephaty.debug.xcconfig"; sourceTree = "<group>"; };
 		EB6AEDAE1A133E8F008C4F38 /* TelephatyDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TelephatyDB.xcdatamodel; sourceTree = "<group>"; };
 		EB6AEDB31A1340F5008C4F38 /* MessageDataUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageDataUtils.h; path = telephaty/Models/MessageDataUtils.h; sourceTree = SOURCE_ROOT; };
@@ -154,6 +150,7 @@
 		A0D2DA6119DCA71B004EB881 /* Telephaty */ = {
 			isa = PBXGroup;
 			children = (
+				EBF9D0501A15FB88003B8B32 /* Telephaty_Api */,
 				A0D2DA8919DCA969004EB881 /* Application */,
 				A0D2DA8A19DCA991004EB881 /* Controllers */,
 				A0D2DA9019DCBB58004EB881 /* Models */,
@@ -204,7 +201,6 @@
 			children = (
 				A0D2DA6F19DCA71C004EB881 /* Images.xcassets */,
 				A0D2DA8819DCA956004EB881 /* AppDelegate */,
-				A0FF2CD019EDFC7C004FE4F1 /* Resources */,
 				A0D2DA6219DCA71C004EB881 /* Supporting Files */,
 			);
 			name = Application;
@@ -261,15 +257,6 @@
 			name = CoreDataService;
 			sourceTree = "<group>";
 		};
-		A0FF2CD019EDFC7C004FE4F1 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				A0FF2CD119EDFC7C004FE4F1 /* Categories.json */,
-				A064B1A019EE00300036CE47 /* ionicons.ttf */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		B49E146D24D6048E92FBF332 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +272,13 @@
 				EBAE8B384CD114D6D8075544 /* libPods-Telephaty.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EBF9D0501A15FB88003B8B32 /* Telephaty_Api */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Telephaty_Api;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -352,7 +346,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A0D2DA5A19DCA71B004EB881 /* Build configuration list for PBXProject "Telephaty" */;
+			buildConfigurationList = A0D2DA5A19DCA71B004EB881 /* Build configuration list for PBXProject "telephaty" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -377,8 +371,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0D2DA6E19DCA71C004EB881 /* Main.storyboard in Resources */,
-				A064B1A119EE00300036CE47 /* ionicons.ttf in Resources */,
-				A0FF2CD319EDFC7C004FE4F1 /* Categories.json in Resources */,
 				A0D2DA7319DCA71C004EB881 /* LaunchScreen.xib in Resources */,
 				A0D2DA7019DCA71C004EB881 /* Images.xcassets in Resources */,
 			);
@@ -634,7 +626,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A0D2DA5A19DCA71B004EB881 /* Build configuration list for PBXProject "Telephaty" */ = {
+		A0D2DA5A19DCA71B004EB881 /* Build configuration list for PBXProject "telephaty" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A0D2DA8019DCA71C004EB881 /* Debug */,

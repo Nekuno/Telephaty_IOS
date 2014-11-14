@@ -20,8 +20,18 @@
  */
 @property (strong, nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 
+
+// Return the unique instance of this class (Singleton).
+
+/**
+ *  Return the unique instance of this class (Singleton).
+ */
+
 + (id)sharedInstance;
 
+/**
+ *  Save content of Data base to disk.
+ */
 - (void)saveContext;
 
 @end

@@ -22,21 +22,34 @@
 @property (weak, nonatomic) id <KNTelephatyCentralServiceDelegate> delegateService;
 
 #pragma mark - Public
-// Tries to scan and connect to any peripheral.
+
+/**
+ * Tries to scan and connect to any peripheral.
+ */
 - (void)connect;
 
-// Disconnects all connected services and peripherals.
+/**
+ * Disconnects all connected services and peripherals.
+ */
 - (void)disconnect;
 
-// Subscribe to characteristics defined in characteristicUUIDs.
+/**
+ * Subscribe to characteristics defined in characteristicUUIDs.
+ */
 - (void)subscribe;
 
-// Unsubscribe from characteristics defined in characteriticUUIDs
+/**
+ * Unsubscribe from characteristics defined in characteriticUUIDs
+ */
 - (void)unsubscribe;
 
 @end
 
 #pragma mark - KNTelephatyCentralServiceDelegate
+
+/**
+ *  Protocol to inform to delegate that a new message has been received.
+ */
 @protocol KNTelephatyCentralServiceDelegate <NSObject>
 
 - (void)telephatyCentralServiceDidReceiveMessage:(MessageData *)message;

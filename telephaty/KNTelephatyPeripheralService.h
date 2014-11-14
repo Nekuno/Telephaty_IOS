@@ -18,15 +18,31 @@
 
 - (void)sendToSubscribers:(NSData *)data;
 
-// Called by the application if it enters the background.
+/**
+ * Called by the application if it enters the background.
+ */
 - (void)applicationDidEnterBackground;
 
-// Called by the application if it enters the foregroud.
+/**
+ * Called by the application if it enters the foregroud.
+ */
 - (void)applicationWillEnterForeground;
 
-// Allows turning on or off the advertisments.
+/**
+ * Allows turning on the advertisments.
+ */
 - (void)startAdvertising;
+
+/**
+ * Allows turning off the advertisments.
+ */
 - (void)stopAdvertising;
+
+/**
+ * Allows know it the device is advertising
+ *
+ * @returm YES or NO.
+ */
 - (BOOL)isAdvertising;
 
 @end

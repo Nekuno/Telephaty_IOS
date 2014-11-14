@@ -49,7 +49,7 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
   NSArray *localMsgs = [MessageDataUtils fetchMessagesInMOC:[[KNCoreDataService sharedInstance] managedObjectContext]];
 
   for (MessageData *msg  in localMsgs) {
-    JSQTextMessage *message = [[JSQTextMessage alloc] initWithSenderId:msg.transmitter
+    JSQMessage *message = [[JSQMessage alloc] initWithSenderId:msg.transmitter
                                                      senderDisplayName:@""
                                                                   date:[self.dateformatter dateFromString:msg.date]
                                                                   text:msg.message];
@@ -126,7 +126,7 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
    */
   [JSQSystemSoundPlayer jsq_playMessageSentSound];
   
-  JSQTextMessage *message = [[JSQTextMessage alloc] initWithSenderId:senderId
+  JSQMessage *message = [[JSQMessage alloc] initWithSenderId:senderId
                                                    senderDisplayName:senderDisplayName
                                                                 date:date
                                                                 text:text];
@@ -279,7 +279,7 @@ attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath {
   
   JSQMessage *msg = [self.messages objectAtIndex:indexPath.item];
   
-  if ([msg isKindOfClass:[JSQTextMessage class]]) {
+  if ([msg isKindOfClass:[JSQMessage class]]) {
     
     if ([msg.senderId isEqualToString:self.senderId]) {
       cell.textView.textColor = [UIColor blackColor];

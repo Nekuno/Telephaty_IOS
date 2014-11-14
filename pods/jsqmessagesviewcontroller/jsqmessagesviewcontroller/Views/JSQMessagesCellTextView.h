@@ -16,13 +16,12 @@
 //  Released under an MIT license: http://opensource.org/licenses/MIT
 //
 
-#import "NSString+JSQMessages.h"
+#import <UIKit/UIKit.h>
 
-@implementation NSString (JSQMessages)
-
-- (NSString *)jsq_stringByTrimingWhitespace
-{
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-}
+/**
+ *  `JSQMessagesCellTextView` is a subclass of `UITextView` that is used to display text
+ *  in a `JSQMessagesCollectionViewCell`.
+ */
+@interface JSQMessagesCellTextView : UITextView
 
 @end

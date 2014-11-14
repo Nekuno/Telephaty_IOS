@@ -86,7 +86,7 @@
 
 - (void)sendToSubscribers:(NSData *)data {
   if (self.peripheralManager.state != CBPeripheralManagerStatePoweredOn) {
-    NSLog(@"sendToSubscribers: peripheral not ready for sending state: %ld", self.peripheralManager.state);
+    NSLog(@"sendToSubscribers: peripheral not ready for sending state: %d", self.peripheralManager.state);
     return;
   }
   

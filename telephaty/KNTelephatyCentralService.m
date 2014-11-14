@@ -13,7 +13,6 @@
 
 @import CoreBluetooth;
 
-static const NSTimeInterval kKNCBScanningTimeout    = 10.0;
 static const NSTimeInterval kKNCBConnectingTimeout  = 10.0;
 static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 
@@ -420,7 +419,6 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
   
   if (error) {
     NSLog(@"didUpdateValueError: %@", error);
-//    [self.delegate centralClient:self requestForCharacteristic:characteristic didFail:error];
     return;
   }
   
@@ -449,9 +447,6 @@ didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
       }
     }
   }
-
-//  NSLog(@"didUpdateValueForChar: Value: %@", characteristic.value);
-//  [self.delegate centralClient:self characteristic:characteristic didUpdateValue:characteristic.value];
 }
 
 @end

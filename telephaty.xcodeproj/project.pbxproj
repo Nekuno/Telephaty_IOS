@@ -19,7 +19,6 @@
 		A0D2DA7F19DCA71C004EB881 /* TelephatyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D2DA7E19DCA71C004EB881 /* TelephatyTests.m */; };
 		A0EA12CC19E75D15003EBCEE /* KNTelephatyService.m in Sources */ = {isa = PBXBuildFile; fileRef = A0EA12CB19E75D15003EBCEE /* KNTelephatyService.m */; };
 		A0FF2CC619EDE7A8004FE4F1 /* KNCoreDataService.m in Sources */ = {isa = PBXBuildFile; fileRef = A0FF2CC519EDE7A8004FE4F1 /* KNCoreDataService.m */; };
-		A0FF2CCE19EDFB57004FE4F1 /* KLNUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A0FF2CCD19EDFB57004FE4F1 /* KLNUtils.m */; };
 		A0FF2CD319EDFC7C004FE4F1 /* Categories.json in Resources */ = {isa = PBXBuildFile; fileRef = A0FF2CD119EDFC7C004FE4F1 /* Categories.json */; };
 		DCF0A988F80A2079BCF70019 /* libPods-Telephaty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBAE8B384CD114D6D8075544 /* libPods-Telephaty.a */; };
 		EB6AEDAF1A133E8F008C4F38 /* TelephatyDB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB6AEDAD1A133E8F008C4F38 /* TelephatyDB.xcdatamodeld */; };
@@ -63,8 +62,6 @@
 		A0EA12CB19E75D15003EBCEE /* KNTelephatyService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNTelephatyService.m; sourceTree = "<group>"; };
 		A0FF2CC419EDE7A8004FE4F1 /* KNCoreDataService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KNCoreDataService.h; sourceTree = "<group>"; };
 		A0FF2CC519EDE7A8004FE4F1 /* KNCoreDataService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KNCoreDataService.m; sourceTree = "<group>"; };
-		A0FF2CCC19EDFB57004FE4F1 /* KLNUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KLNUtils.h; sourceTree = "<group>"; };
-		A0FF2CCD19EDFB57004FE4F1 /* KLNUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KLNUtils.m; sourceTree = "<group>"; };
 		A0FF2CD119EDFC7C004FE4F1 /* Categories.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Categories.json; sourceTree = "<group>"; };
 		D486498DD0602AE446217326 /* Pods-Telephaty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telephaty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telephaty/Pods-Telephaty.debug.xcconfig"; sourceTree = "<group>"; };
 		EB6AEDAE1A133E8F008C4F38 /* TelephatyDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TelephatyDB.xcdatamodel; sourceTree = "<group>"; };
@@ -161,7 +158,6 @@
 				A0D2DA8A19DCA991004EB881 /* Controllers */,
 				A0D2DA9019DCBB58004EB881 /* Models */,
 				A0EA12C919E75CCA003EBCEE /* Services */,
-				A0FF2CCB19EDFB57004FE4F1 /* Utils */,
 				A0D2DA8B19DCA99C004EB881 /* Views */,
 			);
 			path = Telephaty;
@@ -263,16 +259,6 @@
 				A0FF2CC519EDE7A8004FE4F1 /* KNCoreDataService.m */,
 			);
 			name = CoreDataService;
-			sourceTree = "<group>";
-		};
-		A0FF2CCB19EDFB57004FE4F1 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				A0FF2CCC19EDFB57004FE4F1 /* KLNUtils.h */,
-				A0FF2CCD19EDFB57004FE4F1 /* KLNUtils.m */,
-			);
-			name = Utils;
-			path = Helpers;
 			sourceTree = "<group>";
 		};
 		A0FF2CD019EDFC7C004FE4F1 /* Resources */ = {
@@ -448,7 +434,6 @@
 				A0EA12CC19E75D15003EBCEE /* KNTelephatyService.m in Sources */,
 				A0D2DA6819DCA71C004EB881 /* AppDelegate.m in Sources */,
 				EB6AEDB51A1340F5008C4F38 /* MessageDataUtils.m in Sources */,
-				A0FF2CCE19EDFB57004FE4F1 /* KLNUtils.m in Sources */,
 				A0FF2CC619EDE7A8004FE4F1 /* KNCoreDataService.m in Sources */,
 				A084E26219EF93DB009CC5BB /* KNTelephatyPeripheralService.m in Sources */,
 				EB6AEDBB1A1351B3008C4F38 /* MessageData.m in Sources */,

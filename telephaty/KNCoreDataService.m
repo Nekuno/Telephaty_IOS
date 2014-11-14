@@ -77,11 +77,32 @@
   NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
   
   if (coordinator != nil) {
-    _managedObjectContext = [[NSManagedObjectContext alloc] init];
-    [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+
+    _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [_managedObjectContext performBlockAndWait:^{
+      [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }];
   }
   
   return _managedObjectContext;
+}
+
+
+@synthesize mainThreadManagedObjectContext = _mainThreadManagedObjectContext;
+- (NSManagedObjectContext *)mainThreadManagedObjectContext {
+  if (_mainThreadManagedObjectContext != nil) {
+    return _mainThreadManagedObjectContext;
+  }
+  
+  NSManagedObjectContext *masterContext = [self managedObjectContext];
+  if (masterContext != nil) {
+    _mainThreadManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [_mainThreadManagedObjectContext performBlockAndWait:^{
+      [_mainThreadManagedObjectContext setParentContext:masterContext];
+    }];
+  }
+  
+  return _mainThreadManagedObjectContext;
 }
 
 @synthesize managedObjectModel = _managedObjectModel;

@@ -15,10 +15,19 @@
 
 
 /**
- *  Returns the managed object context for the application.
- If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+ *  Returns the master managed object context for the application.
+ *  If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+ *  This context dosen't work in main queue. Used to write
  */
 @property (strong, nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+
+
+/**
+ *  Returns the main thread managed object context for the application.
+ *  If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+ *  This context works in main queue. Used to read
+ */
+@property (strong, nonatomic, readonly) NSManagedObjectContext *mainThreadManagedObjectContext;
 
 
 // Return the unique instance of this class (Singleton).

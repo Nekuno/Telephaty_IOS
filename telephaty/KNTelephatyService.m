@@ -15,6 +15,8 @@
 
 #import "KNConfigurationService.h"
 
+#import "AESCrypt.h"
+
 typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   typeMessageNoUsed,
@@ -123,10 +125,12 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
   NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
+  NSAssert([PASS_AES_ENCRYPTION length] != 0, @"You must set the key for encrypt broadcast messages");
   
+  NSString *encryptedMessage = [AESCrypt encrypt:message password:PASS_AES_ENCRYPTION];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, encryptedMessage];
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
@@ -137,6 +141,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
   NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
+  
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
   NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, message];
@@ -149,6 +154,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
 - (void)resendMessage:(MessageData *)message{
   
   NSInteger jumps = [message.jumps integerValue] -1;
+
   NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),message.date, (long)jumps, message.transmitter, message.message];
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
   
@@ -171,7 +177,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     
     UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
-    localNotification.alertBody = message.message;
+    localNotification.alertBody = [self decryptedMessage:message];
     localNotification.timeZone = [NSTimeZone defaultTimeZone];
     localNotification.soundName = UILocalNotificationDefaultSoundName;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
@@ -181,6 +187,21 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     [self resendMessage:message];
   }
   [self.delegateService telephatyServiceDidReceiveMessage:message];
+}
+
+
+
+
+#pragma mark - Encryption
+
+- (NSString *)decryptedMessage:(MessageData *)messageToDecrypt{
+  
+  if ([messageToDecrypt.type integerValue] ==  typeMessageBroadcast) {
+    return [AESCrypt decrypt:messageToDecrypt.message password:PASS_AES_ENCRYPTION];
+  } else {
+    return messageToDecrypt.message;
+  }
+  
 }
 
 @end

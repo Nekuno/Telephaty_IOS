@@ -78,4 +78,7 @@ static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMes
  *  @discussion If messages to delete are found through a notification kNotificationRemovedOldMessages.
  */
 + (void)clearMessagesFromDataBaseOlderSiceFromNow:(NSTimeInterval)since;
+
+
+
 @end

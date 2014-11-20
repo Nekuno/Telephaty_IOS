@@ -47,13 +47,13 @@ static const NSInteger kAlertRemoveAllMessages    = 80;
   
   NSArray *localMsgs = [MessageDataUtils fetchMessagesInDB];
   for (MessageData *msg  in localMsgs) {
+    NSString *decryptMsg = [[AppDelegate sharedDelegate].telephatyService  decryptedMessage:msg];
     JSQMessage *message = [[JSQMessage alloc] initWithSenderId:msg.transmitter
                                                      senderDisplayName:@""
                                                                   date:[self.dateformatter dateFromString:msg.date]
-                                                                  text:msg.message];
+                                                                  text:decryptMsg];
     [self.messages addObject:message];
   }
-  
 }
 
 - (void)viewDidLoad {
@@ -262,7 +262,8 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)telephatyServiceDidReceiveMessage:(MessageData *)message {
   
-  [self didPressSendButton:nil withMessageText:message.message senderId:message.transmitter senderDisplayName:@"" date:[self.dateformatter dateFromString:message.date]];
+  NSString *decryptMsg = [[AppDelegate sharedDelegate].telephatyService  decryptedMessage:message];
+  [self didPressSendButton:nil withMessageText:decryptMsg senderId:message.transmitter senderDisplayName:@"" date:[self.dateformatter dateFromString:message.date]];
 }
 
 

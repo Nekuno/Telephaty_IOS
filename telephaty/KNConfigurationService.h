@@ -25,6 +25,13 @@
  */
 #define REMOVE_MESSAGES_OLDER_THAN_MINUTES  15
 
+//Encryption
+
+/**
+ * Key used to AES 256-bit encryption in broadcast messages
+ */
+#define PASS_AES_ENCRYPTION @"ATlQgbCTLBLmZEQNtBASBESswuAule6U8XRo9KhZyZL"
+
 @interface KNConfigurationService : NSObject
 
 @end

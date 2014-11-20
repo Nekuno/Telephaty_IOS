@@ -70,6 +70,16 @@
  */
 - (void)resendMessage:(MessageData *)message;
 
+
+/**
+ *  Return de decrypted message.
+ *
+ *  @param messageToDecrypt Message to decrypt
+ *
+ *  @discussion Determine the type of message and return the decrypted message
+ */
+- (NSString *)decryptedMessage:(MessageData *)messageToDecrypt;
+
 @end
 
 #pragma mark - KNTelephatyServiceDelegate

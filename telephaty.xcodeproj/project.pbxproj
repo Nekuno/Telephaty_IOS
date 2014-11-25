@@ -26,7 +26,6 @@
 		EB1D3D181A1E57BD0038C714 /* NSData+Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1D3D101A1E57BD0038C714 /* NSData+Digest.m */; };
 		EB1D3D191A1E57BD0038C714 /* NSString+Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1D3D121A1E57BD0038C714 /* NSString+Digest.m */; };
 		EB1D3D1A1A1E57BD0038C714 /* PPEncrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1D3D151A1E57BD0038C714 /* PPEncrypt.m */; };
-		EB1D3D1B1A1E57BD0038C714 /* PPKeyPair.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1D3D171A1E57BD0038C714 /* PPKeyPair.m */; };
 		EB1D3D1D1A1E6D8A0038C714 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB1D3D1C1A1E6D8A0038C714 /* Security.framework */; };
 		EB73FC881A1DD09F002C4A00 /* AESCrypt.m in Sources */ = {isa = PBXBuildFile; fileRef = EB73FC801A1DD09F002C4A00 /* AESCrypt.m */; };
 		EB73FC891A1DD09F002C4A00 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EB73FC821A1DD09F002C4A00 /* NSData+Base64.m */; };
@@ -82,8 +81,6 @@
 		EB1D3D121A1E57BD0038C714 /* NSString+Digest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Digest.m"; sourceTree = "<group>"; };
 		EB1D3D141A1E57BD0038C714 /* PPEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPEncrypt.h; sourceTree = "<group>"; };
 		EB1D3D151A1E57BD0038C714 /* PPEncrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPEncrypt.m; sourceTree = "<group>"; };
-		EB1D3D161A1E57BD0038C714 /* PPKeyPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPKeyPair.h; sourceTree = "<group>"; };
-		EB1D3D171A1E57BD0038C714 /* PPKeyPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PPKeyPair.m; sourceTree = "<group>"; };
 		EB1D3D1C1A1E6D8A0038C714 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		EB73FC7F1A1DD09F002C4A00 /* AESCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AESCrypt.h; sourceTree = "<group>"; };
 		EB73FC801A1DD09F002C4A00 /* AESCrypt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AESCrypt.m; sourceTree = "<group>"; };
@@ -287,8 +284,6 @@
 				EB1D3D121A1E57BD0038C714 /* NSString+Digest.m */,
 				EB1D3D141A1E57BD0038C714 /* PPEncrypt.h */,
 				EB1D3D151A1E57BD0038C714 /* PPEncrypt.m */,
-				EB1D3D161A1E57BD0038C714 /* PPKeyPair.h */,
-				EB1D3D171A1E57BD0038C714 /* PPKeyPair.m */,
 			);
 			name = RSA;
 			sourceTree = "<group>";
@@ -472,7 +467,6 @@
 				EB1896AE1A15FFDF00B85194 /* KNTelephatyService.m in Sources */,
 				EB73FC8B1A1DD09F002C4A00 /* NSString+Base64.m in Sources */,
 				EB18969B1A15FF9F00B85194 /* MessageDataUtils.m in Sources */,
-				EB1D3D1B1A1E57BD0038C714 /* PPKeyPair.m in Sources */,
 				EB1896AD1A15FFDF00B85194 /* KNTelephatyPeripheralService.m in Sources */,
 				EB18969A1A15FF9F00B85194 /* MessageData.m in Sources */,
 				EB73FC891A1DD09F002C4A00 /* NSData+Base64.m in Sources */,

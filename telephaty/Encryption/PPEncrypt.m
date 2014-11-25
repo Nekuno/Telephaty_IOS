@@ -11,6 +11,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "NSData+Digest.h"
+#import "NSData+Base64.h"
 
 @import Security;
 
@@ -21,66 +22,99 @@
 @implementation PPEncrypt
 
 
-+ (PPKeyPair *)generateKeyPairWithSize:(PPEncryptRSASize)size identifier:(NSString *)identifier
+#pragma mark - AddingKeys
+
++ (NSData *)stripPublicKeyHeader:(NSData *)d_key
 {
-    NSString *publicKeyIdentifier = [self publicKeyIdentifierWithTag:identifier];
-    NSString *privateKeyIdentifier = [self privateKeyIdentifierWithTag:identifier];
-    
-    [self removeKey:publicKeyIdentifier error:nil];
-    [self removeKey:privateKeyIdentifier error:nil];
-    
-    NSData *publicKeyIdentifierData = [publicKeyIdentifier dataUsingEncoding:NSUTF8StringEncoding];
-    NSData *privateKeyIdentifierData = [privateKeyIdentifier dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSDictionary *publicKeyAttributes = @{
-                                          (__bridge id)kSecAttrIsPermanent: @YES,
-                                          (__bridge id)kSecAttrApplicationTag: publicKeyIdentifierData
-                                          };
-    
-    NSDictionary *privateKeyAttributes = @{
-                                           (__bridge id)kSecAttrIsPermanent: @YES,
-                                           (__bridge id)kSecAttrApplicationTag: privateKeyIdentifierData
-                                           };
-    
-    NSDictionary *keypairAttributes = @{
-                                        (__bridge id)kSecAttrKeyType: (__bridge id)kSecAttrKeyTypeRSA,
-                                        (__bridge id)kSecAttrKeySizeInBits: @(size),
-                                        (__bridge id)kSecPrivateKeyAttrs: privateKeyAttributes,
-                                        (__bridge id)kSecPublicKeyAttrs: publicKeyAttributes
-                                        };
-	
-    SecKeyRef publicKey = NULL;
-	SecKeyRef privateKey = NULL;
-    
-	OSStatus status = SecKeyGeneratePair((__bridge CFDictionaryRef)keypairAttributes, &publicKey, &privateKey);
-    
-    PPKeyPair *pair;
-    
-    if (status == errSecSuccess) {
-        pair = [self keyPairWithIdentifier:identifier];
-    }
-    
-    return pair;
+  // Skip ASN.1 public key header
+  if (d_key == nil) return(nil);
+  
+  unsigned int len = [d_key length];
+  if (!len) return(nil);
+  
+  unsigned char *c_key = (unsigned char *)[d_key bytes];
+  unsigned int  idx    = 0;
+  
+  if (c_key[idx++] != 0x30) return(nil);
+  
+  if (c_key[idx] > 0x80) idx += c_key[idx] - 0x80 + 1;
+  else idx++;
+  
+  // PKCS #1 rsaEncryption szOID_RSA_RSA
+  static unsigned char seqiod[] =
+  { 0x30,   0x0d, 0x06, 0x09, 0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01,
+    0x01, 0x05, 0x00 };
+  if (memcmp(&c_key[idx], seqiod, 15)) return(nil);
+  
+  idx += 15;
+  
+  if (c_key[idx++] != 0x03) return(nil);
+  
+  if (c_key[idx] > 0x80) idx += c_key[idx] - 0x80 + 1;
+  else idx++;
+  
+  if (c_key[idx++] != '\0') return(nil);
+  
+  // Now make a new NSData from this buffer
+  return([NSData dataWithBytes:&c_key[idx] length:len - idx]);
 }
 
-+ (PPKeyPair *)keyPairWithIdentifier:(NSString *)identifier
-{
-    NSString *publicKeyIdentifier = [self publicKeyIdentifierWithTag:identifier];
-    NSString *privateKeyIdentifier = [self privateKeyIdentifierWithTag:identifier];
-    
-    SecKeyRef publicKey = [self keyRefWithTag:publicKeyIdentifier error:nil];
-    SecKeyRef privateKey = [self keyRefWithTag:privateKeyIdentifier error:nil];
-    
-    PPKeyPair *pair;
-    
-    if (publicKey && privateKey) {
-        pair = [[PPKeyPair alloc] initWithIdentifier:identifier
-                                           publicKey:publicKey
-                                          privateKey:privateKey];
-    }
-    
-    return pair;
+
++ (SecKeyRef)addKey:(NSString *)key withTag:(NSString *)tag public:(BOOL)public{
+  NSString *s_key = key;
+  
+  if (s_key.length == 0) return(FALSE);
+  
+  // This will be base64 encoded, decode it.
+  NSData *d_key = [NSData base64DataFromString:key];
+  if (public) {
+    d_key = [self stripPublicKeyHeader:d_key];
+  }
+  
+  if (d_key == nil) return(FALSE);
+  
+  NSData *d_tag = [NSData dataWithBytes:[tag UTF8String] length:[tag length]];
+  
+  // Delete any old lingering key with the same tag
+  NSMutableDictionary *dictionaryKey = [[NSMutableDictionary alloc] init];
+  [dictionaryKey setObject:(__bridge id) kSecClassKey forKey:(__bridge id)kSecClass];
+  [dictionaryKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+  [dictionaryKey setObject:d_tag forKey:(__bridge id)kSecAttrApplicationTag];
+  SecItemDelete((__bridge CFDictionaryRef)dictionaryKey);
+  
+  CFTypeRef persistKey = nil;
+  
+  // Add persistent version of the key to system keychain
+  [dictionaryKey setObject:d_key forKey:(__bridge id)kSecValueData];
+  if (public) {
+    [dictionaryKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
+  } else {
+    [dictionaryKey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
+  }
+  
+  [dictionaryKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
+  
+  OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)dictionaryKey, &persistKey);
+  if (persistKey != nil) CFRelease(persistKey);
+  
+  if ((secStatus != noErr) && (secStatus != errSecDuplicateItem)) {
+    return nil;
+  }
+  
+  // Now fetch the SecKeyRef version of the key
+  SecKeyRef keyRef = nil;
+  
+  [dictionaryKey removeObjectForKey:(__bridge id)kSecValueData];
+  [dictionaryKey removeObjectForKey:(__bridge id)kSecReturnPersistentRef];
+  [dictionaryKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnRef];
+  [dictionaryKey setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+  SecItemCopyMatching((__bridge CFDictionaryRef)dictionaryKey, (CFTypeRef *)&keyRef);
+  
+  if (keyRef == nil) return nil;
+  
+  return keyRef;
 }
+
 
 #pragma mark - Encryption Methods
 
@@ -167,14 +201,11 @@
 
 #pragma mark - Signing Methods
 
-+ (NSData *)signData:(NSData *)data withPadding:(SecPadding)padding andPair:(PPKeyPair *)pair
++ (NSData *)signData:(NSData *)data withPadding:(SecPadding)padding andIdentifier:(NSString *)identifier
 {
-    if (data == nil || pair == nil) {
+    if (data == nil || identifier == nil) {
         return nil;
     }
-    
-    NSString *identifier = [self privateKeyIdentifierWithTag:pair.identifier];
-    
     SecKeyRef privateKey = [self keyRefWithTag:identifier error:nil];
     
     NSData *signedData;
@@ -221,16 +252,12 @@
     return signedData;
 }
 
-+ (BOOL)verifyData:(NSData *)data againstSignature:(NSData *)signature withPadding:(SecPadding)padding andPair:(PPKeyPair *)pair
++ (BOOL)verifyData:(NSData *)data againstSignature:(NSData *)signature withPadding:(SecPadding)padding andPublicKey:(SecKeyRef)publicKey
 {
     if (!signature) {
         return NO;
     }
-    
-    NSString *identifier = [self publicKeyIdentifierWithTag:pair.identifier];
-    
-    SecKeyRef publicKey = [self keyRefWithTag:identifier error:nil];
-    
+  
     if (publicKey) {
         NSData *dataToVerify = [self digestForData:data withPadding:padding];
         

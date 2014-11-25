@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "PPKeyPair.h"
-
 typedef NS_ENUM(NSInteger, PPEncryptRSASize) {
     PPEncryptRSASize512 = 512,
     PPEncryptRSASize768 = 768,
@@ -26,13 +24,12 @@ typedef NS_ENUM(NSInteger, PPEncryptRSASize) {
 
 @interface PPEncrypt : NSObject
 
-+ (PPKeyPair *)generateKeyPairWithSize:(PPEncryptRSASize)size identifier:(NSString *)identifier;
-+ (PPKeyPair *)keyPairWithIdentifier:(NSString *)identifier;
++ (SecKeyRef)addKey:(NSString *)key withTag:(NSString *)tag public:(BOOL)publickey;
 
 + (NSString *)encrypt:(NSString *)string withKey:(SecKeyRef)publicKey;
 + (NSString *)decrypt:(NSString *)data withKey:(SecKeyRef)privateKey;
 
-+ (NSData *)signData:(NSData *)data withPadding:(SecPadding)padding andPair:(PPKeyPair *)pair;
-+ (BOOL)verifyData:(NSData *)data againstSignature:(NSData *)signature withPadding:(SecPadding)padding andPair:(PPKeyPair *)pair;
++ (NSData *)signData:(NSData *)data withPadding:(SecPadding)padding andIdentifier:(NSString *)identifier;
++ (BOOL)verifyData:(NSData *)data againstSignature:(NSData *)signature withPadding:(SecPadding)padding andPublicKey:(SecKeyRef)publicKey;
 
 @end

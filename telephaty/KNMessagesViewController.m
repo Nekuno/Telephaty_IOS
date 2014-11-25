@@ -312,6 +312,8 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
         
       } else {
         [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
+        
+          [self didPressSendButton:nil withMessageText:[alertView textFieldAtIndex:0].text senderId:self.senderId senderDisplayName:@"" date:[NSDate date]];
       }
       _messageSelected = nil;
     }

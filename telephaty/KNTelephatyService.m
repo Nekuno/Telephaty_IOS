@@ -16,6 +16,7 @@
 #import "KNConfigurationService.h"
 
 #import "AESCrypt.h"
+#import "RSA.h"
 
 typedef NS_ENUM(NSUInteger, TypeMessage) {
   
@@ -37,9 +38,20 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
  */
 @property (copy, nonatomic, readonly) KNTelephatyPeripheralService *peripheralService;
 
+/**
+ * Public key to encrypt direct messages
+ */
+@property (nonatomic, assign) SecKeyRef publicKey;
+
+/**
+ * Public key to decrypt direct messages
+ */
+@property (nonatomic, assign) SecKeyRef privateKey;
+
 @property (nonatomic, strong) NSTimer *cleanTimer;
 
 @property (nonatomic, strong) NSDateFormatter *formatter;
+
 
 @end
 
@@ -95,6 +107,22 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
 }
 
+- (SecKeyRef)publicKey{
+  
+  if (!_publicKey) {
+    _publicKey = [RSA addKey:RSA_PUBLIC_KEY withTag:@"com.qnow.telepahty.publickey" public:YES];
+  }
+  return _publicKey;
+}
+
+- (SecKeyRef)privateKey{
+  
+  if (!_privateKey) {
+    _privateKey = [RSA addKey:RSA_PRIVATE_KEY withTag:@"com.qnow.telepahty.privatekey" public:NO];
+  }
+  return _privateKey;
+}
+
 #pragma mark - Public methods
 
 - (void)startWatch {
@@ -142,9 +170,10 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
   NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
   
+  NSString *encryptedMessage = [RSA encrypt:message withKey:self.publicKey];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, encryptedMessage];
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
@@ -189,9 +218,6 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   [self.delegateService telephatyServiceDidReceiveMessage:message];
 }
 
-
-
-
 #pragma mark - Encryption
 
 - (NSString *)decryptedMessage:(MessageData *)messageToDecrypt{
@@ -199,7 +225,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   if ([messageToDecrypt.type integerValue] ==  typeMessageBroadcast) {
     return [AESCrypt decrypt:messageToDecrypt.message password:PASS_AES_ENCRYPTION];
   } else {
-    return messageToDecrypt.message;
+    return [RSA decrypt:messageToDecrypt.message withKey:self.privateKey];
   }
   
 }

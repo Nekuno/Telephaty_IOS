@@ -36,14 +36,14 @@
   [self.telephatyService startWatch];
   
 
-  SecKeyRef publicKey = [RSA addKey:RSA_PUBLIC_KEY withTag:@"com.qnow.telepahty.publickey2" public:YES];
-  SecKeyRef privateKey = [RSA addKey:RSA_PRIVATE_KEY withTag:@"com.qnow.telepahty.privateKey2" public:NO];
-  
-  NSString *encrypted = [RSA encrypt:@"Hello World" withKey:publicKey];
-  NSLog(@"Encrypted: %@", encrypted);
-  
-  NSString *dencrypted = [RSA decrypt:encrypted withKey:privateKey];
-  NSLog(@"Dencrypted: %@", dencrypted);
+//  SecKeyRef publicKey = [RSA addKey:RSA_PUBLIC_KEY withTag:@"com.qnow.telepahty.publickey2" public:YES];
+//  SecKeyRef privateKey = [RSA addKey:RSA_PRIVATE_KEY withTag:@"com.qnow.telepahty.privateKey2" public:NO];
+//  
+//  NSString *encrypted = [RSA encrypt:@"Hello World" withKey:publicKey];
+//  NSLog(@"Encrypted: %@", encrypted);
+//  
+//  NSString *dencrypted = [RSA decrypt:encrypted withKey:privateKey];
+//  NSLog(@"Dencrypted: %@", dencrypted);
 
   return YES;
 }

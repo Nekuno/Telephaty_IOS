@@ -1,12 +1,12 @@
 //
-//  PPEncrypt.m
-//  PPEncrypt
+//  RSA.m
+//  Telephaty
 //
-//  Created by Juan on 3/3/14.
-//  Copyright (c) 2014 Alvarez Productions. All rights reserved.
+//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
+//  Copyright (c) 2014. All rights reserved.
 //
 
-#import "PPEncrypt.h"
+#import "RSA.h"
 
 #import <CommonCrypto/CommonCrypto.h>
 
@@ -15,11 +15,11 @@
 
 @import Security;
 
-@interface PPEncrypt ()
+@interface RSA ()
 
 @end
 
-@implementation PPEncrypt
+@implementation RSA
 
 
 #pragma mark - AddingKeys

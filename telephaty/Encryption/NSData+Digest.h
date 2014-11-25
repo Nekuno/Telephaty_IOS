@@ -1,11 +1,10 @@
 //
 //  NSData+Digest.h
-//  PPEncrypt
+//  Telephaty
 //
-//  Created by Juan Alvarez on 5/9/14.
-//  Copyright (c) 2014 Alvarez Productions. All rights reserved.
+//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
+//  Copyright (c) 2014. All rights reserved.
 //
-
 #import <Foundation/Foundation.h>
 
 @interface NSData (Digest)

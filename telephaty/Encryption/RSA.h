@@ -1,28 +1,20 @@
 //
-//  PPEncrypt.h
-//  PPEncrypt
+//  RSA.h
+//  Telephaty
 //
-//  Created by Juan on 3/3/14.
-//  Copyright (c) 2014 Alvarez Productions. All rights reserved.
+//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
+//  Copyright (c) 2014. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, PPEncryptRSASize) {
-    PPEncryptRSASize512 = 512,
-    PPEncryptRSASize768 = 768,
-    PPEncryptRSASize1024 = 1024,
-    PPEncryptRSASize2048 = 2048
-};
+@interface RSASettings : NSObject
 
-@interface PPEncryptSettings : NSObject
-
-@property (nonatomic, assign) PPEncryptRSASize rsaSize;
 @property (nonatomic, assign) SecPadding padding;
 
 @end
 
-@interface PPEncrypt : NSObject
+@interface RSA : NSObject
 
 + (SecKeyRef)addKey:(NSString *)key withTag:(NSString *)tag public:(BOOL)publickey;
 

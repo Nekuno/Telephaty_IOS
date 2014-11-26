@@ -12,10 +12,10 @@
 
 @implementation MessageDataUtils
 
-static const NSInteger kIndexStartEmisorForType1     = 16.0;
-static const NSInteger kIndexStartEmisorForType2     = 32.0;
-static const NSInteger kIndexStarMsgForType1         = 32.0;
-static const NSInteger kIndexStarMsgForType2         = 48.0;
+static const NSInteger kIndexStartEmisorForType1     = 20.0;
+static const NSInteger kIndexStartEmisorForType2     = 36.0;
+static const NSInteger kIndexStarMsgForType1         = 36.0;
+static const NSInteger kIndexStarMsgForType2         = 54.0;
 
 #pragma mark - Parameters & Constants
 
@@ -27,7 +27,7 @@ static NSString *const ItemMDEntityName = @"MessageData";
   
   NSDictionary *msgDict = [self parseMessageData:msgData];
   
-  MessageData *msg = [self fetchMessageInDBWithDate:msgDict[@"date"] andTransmitter:msgDict[@"transmitter"]];
+  MessageData *msg = [self fetchMessageInDBWithDate:msgDict[@"date"] andTransmitter:msgDict[@"transmitter"] part:msgDict[@"part"]];
   
   if (msg) {
     return nil;
@@ -43,6 +43,8 @@ static NSString *const ItemMDEntityName = @"MessageData";
   msg.transmitter = msgDict[@"transmitter"];
   msg.message = msgDict[@"message"];
   msg.created = [NSDate date];
+  msg.part = msgDict[@"type"];
+  msg.totalparts = msgDict[@"totalparts"];
 
   return msg;
 }
@@ -90,13 +92,13 @@ static NSString *const ItemMDEntityName = @"MessageData";
 
 
 
-+ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter{
++ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter part:(NSString *)part;
+{
   
   MessageData *msgData;
    NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
   NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
-  fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date == %@ AND transmitter = %@", date, transmitter];
-
+  fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date == %@ AND transmitter = %@ AND part = %@", date, transmitter, part];
   NSError *error;
   NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
   if ([results count] != 0) {
@@ -116,6 +118,9 @@ static NSString *const ItemMDEntityName = @"MessageData";
 + (NSArray *)fetchMessagesInMoc:(NSManagedObjectContext *)moc{
 
   NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
+  fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:YES],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"transmitter" ascending:YES],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"part" ascending:YES]];
   
   NSError *error;
   NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
@@ -139,21 +144,29 @@ static NSString *const ItemMDEntityName = @"MessageData";
   NSString *receiver;
   NSString *date = [msgData substringWithRange:NSMakeRange(1, 14)];
   NSString *jumps = [msgData substringWithRange:NSMakeRange(15, 1)];
+  NSString *part;
+  NSString *totalParts;
   
   if ([typeMsg integerValue] == 1) {
     message = [msgData substringFromIndex:kIndexStarMsgForType1];
     emisorId = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType1, 16)];
+    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 4, 2)];
+    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 2, 2)];
   } else {
     message = [msgData substringFromIndex:kIndexStarMsgForType2];
     emisorId = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType2, 16)];
     receiver = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType1, 16)];
+    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 4, 2)];
+    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 2, 2)];
   }
   
   NSMutableDictionary *msgDict = [@{@"type":typeMsg,
                                    @"date":date,
                                    @"jumps":jumps,
                                    @"transmitter":emisorId,
-                                   @"message":message} mutableCopy];
+                                   @"message":message,
+                                   @"part" :part,
+                                   @"totalParts":totalParts} mutableCopy];
   
   if (receiver) {
     msgDict[@"receiver"] = receiver;

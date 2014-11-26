@@ -5,11 +5,13 @@
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="jumps" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="part" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="receiver" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="totalparts" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transmitter" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="MessageData" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="MessageData" positionX="-63" positionY="-18" width="128" height="180"/>
     </elements>
 </model>

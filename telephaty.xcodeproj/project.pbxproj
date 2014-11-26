@@ -15,7 +15,6 @@
 		A0D2DA7319DCA71C004EB881 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A0D2DA7119DCA71C004EB881 /* LaunchScreen.xib */; };
 		A0D2DA7F19DCA71C004EB881 /* TelephatyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D2DA7E19DCA71C004EB881 /* TelephatyTests.m */; };
 		DCF0A988F80A2079BCF70019 /* libPods-Telephaty.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBAE8B384CD114D6D8075544 /* libPods-Telephaty.a */; };
-		EB18969A1A15FF9F00B85194 /* MessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1896951A15FF9F00B85194 /* MessageData.m */; };
 		EB18969B1A15FF9F00B85194 /* MessageDataUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1896971A15FF9F00B85194 /* MessageDataUtils.m */; };
 		EB18969C1A15FF9F00B85194 /* TelephatyDB.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB1896981A15FF9F00B85194 /* TelephatyDB.xcdatamodeld */; };
 		EB1896AA1A15FFDF00B85194 /* KNConfigurationService.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1896A11A15FFDF00B85194 /* KNConfigurationService.m */; };
@@ -30,6 +29,7 @@
 		EB73FC891A1DD09F002C4A00 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EB73FC821A1DD09F002C4A00 /* NSData+Base64.m */; };
 		EB73FC8A1A1DD09F002C4A00 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = EB73FC841A1DD09F002C4A00 /* NSData+CommonCrypto.m */; };
 		EB73FC8B1A1DD09F002C4A00 /* NSString+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EB73FC861A1DD09F002C4A00 /* NSString+Base64.m */; };
+		EBD1DE471A263DE1005C5253 /* MessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD1DE461A263DE1005C5253 /* MessageData.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,8 +59,6 @@
 		A0D2DA7D19DCA71C004EB881 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A0D2DA7E19DCA71C004EB881 /* TelephatyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TelephatyTests.m; sourceTree = "<group>"; };
 		D486498DD0602AE446217326 /* Pods-Telephaty.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Telephaty.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Telephaty/Pods-Telephaty.debug.xcconfig"; sourceTree = "<group>"; };
-		EB1896941A15FF9F00B85194 /* MessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageData.h; sourceTree = "<group>"; };
-		EB1896951A15FF9F00B85194 /* MessageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageData.m; sourceTree = "<group>"; };
 		EB1896961A15FF9F00B85194 /* MessageDataUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageDataUtils.h; sourceTree = "<group>"; };
 		EB1896971A15FF9F00B85194 /* MessageDataUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageDataUtils.m; sourceTree = "<group>"; };
 		EB1896991A15FF9F00B85194 /* TelephatyDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TelephatyDB.xcdatamodel; sourceTree = "<group>"; };
@@ -88,6 +86,8 @@
 		EB73FC851A1DD09F002C4A00 /* NSString+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Base64.h"; sourceTree = "<group>"; };
 		EB73FC861A1DD09F002C4A00 /* NSString+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Base64.m"; sourceTree = "<group>"; };
 		EBAE8B384CD114D6D8075544 /* libPods-Telephaty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Telephaty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EBD1DE451A263DE1005C5253 /* MessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageData.h; path = telephaty/MessageData.h; sourceTree = SOURCE_ROOT; };
+		EBD1DE461A263DE1005C5253 /* MessageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageData.m; path = telephaty/MessageData.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,11 +246,11 @@
 		EB18969E1A15FFB800B85194 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				EB1896941A15FF9F00B85194 /* MessageData.h */,
-				EB1896951A15FF9F00B85194 /* MessageData.m */,
 				EB1896961A15FF9F00B85194 /* MessageDataUtils.h */,
 				EB1896971A15FF9F00B85194 /* MessageDataUtils.m */,
 				EB1896981A15FF9F00B85194 /* TelephatyDB.xcdatamodeld */,
+				EBD1DE451A263DE1005C5253 /* MessageData.h */,
+				EBD1DE461A263DE1005C5253 /* MessageData.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -459,10 +459,10 @@
 				EB73FC8A1A1DD09F002C4A00 /* NSData+CommonCrypto.m in Sources */,
 				EB1896AC1A15FFDF00B85194 /* KNTelephatyCentralService.m in Sources */,
 				EB1896AE1A15FFDF00B85194 /* KNTelephatyService.m in Sources */,
+				EBD1DE471A263DE1005C5253 /* MessageData.m in Sources */,
 				EB73FC8B1A1DD09F002C4A00 /* NSString+Base64.m in Sources */,
 				EB18969B1A15FF9F00B85194 /* MessageDataUtils.m in Sources */,
 				EB1896AD1A15FFDF00B85194 /* KNTelephatyPeripheralService.m in Sources */,
-				EB18969A1A15FF9F00B85194 /* MessageData.m in Sources */,
 				EB73FC891A1DD09F002C4A00 /* NSData+Base64.m in Sources */,
 				EB1896AA1A15FFDF00B85194 /* KNConfigurationService.m in Sources */,
 				EB1D3D1A1A1E57BD0038C714 /* RSA.m in Sources */,

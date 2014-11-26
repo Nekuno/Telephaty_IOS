@@ -18,6 +18,9 @@
 #import "AESCrypt.h"
 #import "RSA.h"
 
+static NSInteger klimitBytesBroadcastMessage = 95;
+static NSInteger klimitBytesDirectMessage = 60;
+
 typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   typeMessageNoUsed,
@@ -158,10 +161,18 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSString *encryptedMessage = [AESCrypt encrypt:message password:PASS_AES_ENCRYPTION];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, encryptedMessage];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, @"01",@"01",encryptedMessage];
+  NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
-  [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+  if ([dataEncrypted length] > klimitBytesBroadcastMessage) {
+    NSLog(@"Meesage too large, split it!!");
+  } else {
+    [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+  }
   
+//  NSString *header = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, @"01",@"01"];
+//  NSData *dataHeader = [header dataUsingEncoding:NSUTF8StringEncoding];
+
   NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
   [self.peripheralService sendToSubscribers:dataMsg];
 }
@@ -171,15 +182,22 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
   NSAssert(jumps < 10, @"Number of jumps must be smaller than 10");
   
-  NSString *encryptedMessage = [RSA encrypt:message withKey:self.publicKey];
+//  NSString *encryptedMessage = [RSA encrypt:message withKey:self.publicKey];
+  NSString *encryptedMessage = [AESCrypt encrypt:message password:PASS_AES_ENCRYPTION];
+  NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, encryptedMessage];
-  
-  [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
-  
-  NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
-  [self.peripheralService sendToSubscribers:dataMsg];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier,@"01",@"01", encryptedMessage];
+  if ([dataEncrypted length] > klimitBytesDirectMessage) {
+    NSLog(@"Meesage too large, split it!!");
+  } else {
+    [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+  }
+//  NSString *header = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, @"01",@"01"];
+//  NSData *dataHeader = [header dataUsingEncoding:NSUTF8StringEncoding];
+
+    NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+    [self.peripheralService sendToSubscribers:dataMsg];
 }
 
 - (void)resendMessage:(MessageData *)message{
@@ -227,7 +245,8 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   if ([messageToDecrypt.type integerValue] ==  typeMessageBroadcast) {
     return [AESCrypt decrypt:messageToDecrypt.message password:PASS_AES_ENCRYPTION];
   } else {
-    return [RSA decrypt:messageToDecrypt.message withKey:self.privateKey];
+  //  return [RSA decrypt:messageToDecrypt.message withKey:self.privateKey];
+    return [AESCrypt decrypt:messageToDecrypt.message password:PASS_AES_ENCRYPTION];
   }
 }
 

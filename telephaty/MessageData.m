@@ -1,9 +1,9 @@
 //
 //  MessageData.m
-//  Telephaty
+//  telephaty
 //
-//  Created by PEDRO MUÑOZ CABRERA on 12/11/14.
-//
+//  Created by PEDRO MUÑOZ CABRERA on 26/11/14.
+//  Copyright (c) 2014 kiliannet. All rights reserved.
 //
 
 #import "MessageData.h"
@@ -11,12 +11,14 @@
 
 @implementation MessageData
 
-@dynamic type;
+@dynamic created;
 @dynamic date;
 @dynamic jumps;
+@dynamic message;
 @dynamic receiver;
 @dynamic transmitter;
-@dynamic message;
-@dynamic created;
+@dynamic type;
+@dynamic part;
+@dynamic totalparts;
 
 @end

@@ -152,6 +152,36 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     });
   }
 }
+- (NSMutableDictionary *)splitMesage:(NSString *)message ofType:(NSInteger)type andLength:(NSInteger)lengthData {
+  
+  NSInteger limitBytes = type == typeMessageBroadcast ? klimitBytesBroadcastMessage : klimitBytesDirectMessage;
+  
+  NSInteger parts = (lengthData / limitBytes) + 1;
+  NSInteger lengthParts = ([message length] / parts);
+  NSArray *array = [message componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+  array = [array filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF != ''"]];
+  NSMutableDictionary *splitedMessage = [NSMutableDictionary dictionary];
+  NSString *partMsg;
+  for (NSString *word in array) {
+    if (partMsg) {
+      if (([partMsg length] + [word length] + 1) > lengthParts) {
+        NSString *key = [NSString stringWithFormat:@"%d", [[splitedMessage allKeys] count]+1];
+        splitedMessage[key] = partMsg;
+        partMsg = word;
+      } else {
+        partMsg = [partMsg stringByAppendingFormat:@" %@",word];
+      }
+    } else {
+      partMsg = word;
+    }
+  }
+  
+  NSString *key = [NSString stringWithFormat:@"%d", [[splitedMessage allKeys] count]+1];
+  splitedMessage[key] = partMsg;
+  
+  return splitedMessage;
+}
+
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps{
   
   NSAssert(jumps > 0, @"Number of jumps must be greater than 0");
@@ -165,16 +195,25 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
   if ([dataEncrypted length] > klimitBytesBroadcastMessage) {
-    NSLog(@"Meesage too large, split it!!");
+
+    NSDictionary *splitedMsg = [self splitMesage:message ofType:typeMessageBroadcast andLength:[dataEncrypted length]];
+    NSString *totalPartsStr =  [[splitedMsg allKeys] count] > 9 ? [NSString stringWithFormat:@"%d",[[splitedMsg allKeys] count]] : [NSString stringWithFormat:@"0%d",[[splitedMsg allKeys] count]];
+    for (NSString *key in [[splitedMsg allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]) {
+      
+      NSString *partStr = [key length] > 1 ? key : [NSString stringWithFormat:@"0%@",key];
+      //encryptedMessage = [RSA encrypt:splitedMsg[key] withKey:self.publicKey];
+      encryptedMessage = [AESCrypt encrypt:splitedMsg[key] password:PASS_AES_ENCRYPTION];
+      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, partStr,totalPartsStr,encryptedMessage];
+      [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+      NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+      [self.peripheralService sendToSubscribers:dataMsg];
+      
+    }
   } else {
     [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+    NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+    [self.peripheralService sendToSubscribers:dataMsg];
   }
-  
-//  NSString *header = [NSString stringWithFormat:@"%@%@%ld%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, @"01",@"01"];
-//  NSData *dataHeader = [header dataUsingEncoding:NSUTF8StringEncoding];
-
-  NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
-  [self.peripheralService sendToSubscribers:dataMsg];
 }
 
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to{
@@ -188,16 +227,28 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
   NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier,@"01",@"01", encryptedMessage];
+  
   if ([dataEncrypted length] > klimitBytesDirectMessage) {
-    NSLog(@"Meesage too large, split it!!");
+    
+    NSDictionary *splitedMsg = [self splitMesage:message ofType:typeMessageDirect andLength:[dataEncrypted length]];
+    NSString *totalPartsStr =  [[splitedMsg allKeys] count] > 9 ? [NSString stringWithFormat:@"%d",[[splitedMsg allKeys] count]] : [NSString stringWithFormat:@"0%d",[[splitedMsg allKeys] count]];
+    
+    for (NSString *key in [[splitedMsg allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]) {
+      
+      NSString *partStr = [key length] > 1 ? key : [NSString stringWithFormat:@"0%@",key];
+      //encryptedMessage = [RSA encrypt:splitedMsg[key] withKey:self.publicKey];
+      encryptedMessage = [AESCrypt encrypt:splitedMsg[key] password:PASS_AES_ENCRYPTION];
+      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps,to, self.identifier, partStr,totalPartsStr,encryptedMessage];
+      [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
+      NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+      [self.peripheralService sendToSubscribers:dataMsg];
+    }
   } else {
+    
     [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
-  }
-//  NSString *header = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, @"01",@"01"];
-//  NSData *dataHeader = [header dataUsingEncoding:NSUTF8StringEncoding];
-
     NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
     [self.peripheralService sendToSubscribers:dataMsg];
+  }
 }
 
 - (void)resendMessage:(MessageData *)message{

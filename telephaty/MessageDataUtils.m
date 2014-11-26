@@ -12,10 +12,10 @@
 
 @implementation MessageDataUtils
 
-static const NSInteger kIndexStartEmisorForType1     = 20.0;
-static const NSInteger kIndexStartEmisorForType2     = 36.0;
+static const NSInteger kIndexStartEmisorForType1     = 16.0;
+static const NSInteger kIndexStartEmisorForType2     = 32.0;
 static const NSInteger kIndexStarMsgForType1         = 36.0;
-static const NSInteger kIndexStarMsgForType2         = 54.0;
+static const NSInteger kIndexStarMsgForType2         = 52.0;
 
 #pragma mark - Parameters & Constants
 
@@ -44,7 +44,7 @@ static NSString *const ItemMDEntityName = @"MessageData";
   msg.message = msgDict[@"message"];
   msg.created = [NSDate date];
   msg.part = msgDict[@"type"];
-  msg.totalparts = msgDict[@"totalparts"];
+  msg.totalparts = msgDict[@"totalParts"];
 
   return msg;
 }

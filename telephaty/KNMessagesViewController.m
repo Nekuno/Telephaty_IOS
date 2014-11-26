@@ -311,9 +311,12 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
         [MessageDataUtils clearAllMessagesFromDataBase];
         
       } else {
-        [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
-        
+        if ([[alertView textFieldAtIndex:0].text length] != 0) {
+          [[AppDelegate sharedDelegate].telephatyService sendMessage:[alertView textFieldAtIndex:0].text withJumps:kInitialNumbersOfJumps to:_messageSelected.senderId];
+          
           [self didPressSendButton:nil withMessageText:[alertView textFieldAtIndex:0].text senderId:self.senderId senderDisplayName:@"" date:[NSDate date]];
+        }
+
       }
       _messageSelected = nil;
     }

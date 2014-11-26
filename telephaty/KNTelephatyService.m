@@ -162,7 +162,8 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
-  [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
+  NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+  [self.peripheralService sendToSubscribers:dataMsg];
 }
 
 - (void)sendMessage:(NSString *)message withJumps:(NSInteger)jumps to:(NSString *)to{
@@ -177,7 +178,8 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
   
-  [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
+  NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
+  [self.peripheralService sendToSubscribers:dataMsg];
 }
 
 - (void)resendMessage:(MessageData *)message{
@@ -227,7 +229,6 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   } else {
     return [RSA decrypt:messageToDecrypt.message withKey:self.privateKey];
   }
-  
 }
 
 @end

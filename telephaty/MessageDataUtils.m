@@ -109,6 +109,23 @@ static NSString *const ItemMDEntityName = @"MessageData";
 
 }
 
++ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter{
+  
+  MessageData *msgData;
+  NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
+  NSFetchRequest *fetchRequest = [self prepareMessageDataInMOC:moc];
+  fetchRequest.predicate = [NSPredicate predicateWithFormat:@"date == %@ AND transmitter = %@", date, transmitter];
+  NSError *error;
+  NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
+  if ([results count] != 0) {
+    NSAssert(([results count] == 1), @"More than one msg with the same date and transmitter id  exist.");
+    msgData = [results objectAtIndex:0];
+  }
+  return msgData;
+  
+  
+}
+
 + (NSArray *)fetchMessagesInDB{
   
   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];

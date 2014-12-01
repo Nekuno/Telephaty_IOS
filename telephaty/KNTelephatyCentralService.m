@@ -186,12 +186,6 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 //             afterDelay:kKNCBScanningTimeout];
 }
 
-- (void)cancelScanningTimeoutMonitor {
-//  [NSObject cancelPreviousPerformRequestsWithTarget:self
-//                                           selector:@selector(scanningDidTimeout)
-//                                             object:nil];
-}
-
 - (void)scanningDidTimeout {
 //  NSLog(@"Scanning did timeout");
 ////  NSError *error = [[self class] errorWithDescription:@"Unable to find a BTLE device."];
@@ -321,8 +315,7 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
   // TODO: This does not deal with multiple devices advertising the same service
   //       yet.
   if (foundSuitablePeripheral) {
-    [self cancelScanningTimeoutMonitor];
-    [self.centralManager stopScan];
+  //  [self.centralManager stopScan];
 #if DEBUG
     NSLog(@"Connecting ... %@", peripheralUUID);
 #endif
@@ -406,9 +399,7 @@ didDiscoverCharacteristicsForService:(CBService *)service
   // For logging, just print out all the discovered services.
 #if DEBUG
   NSLog(@"didDiscoverChar: Found %ld characteristic(s)", (unsigned long)service.characteristics.count);
-#endif
   for (CBCharacteristic *characteristic in service.characteristics) {
-#if DEBUG
     NSLog(@"didDiscoverChar:  Characteristic: %@", characteristic.UUID);
 #endif
   }
@@ -434,15 +425,12 @@ didDiscoverCharacteristicsForService:(CBService *)service
 - (void)peripheral:(CBPeripheral *)peripheral
 didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic
              error:(NSError *)error {
-//  [self cancelRequestTimeoutMonitor:characteristic];
-  
   if (error) {
 #if DEBUG    
     NSLog(@"didUpdateValueError: %@", error);
 #endif
     return;
   }
-  
   
   NSString *messageReceived = [[NSString alloc] initWithData:characteristic.value encoding:NSUTF8StringEncoding];
   

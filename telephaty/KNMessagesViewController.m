@@ -290,10 +290,16 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
       }
       case 3: {      
         NSLog(@"Resend message:%@", _messageSelected.text);
-        MessageData *msg = [MessageDataUtils fetchMessageInDBWithDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
+        NSArray *msgs = [MessageDataUtils fetchMessageInDBWithDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
         
-        if (msg && [msg.jumps integerValue] > 1) {
-          [[AppDelegate sharedDelegate].telephatyService resendMessage:msg];
+        MessageData *amsg;
+        for (MessageDataUtils *msg in msgs) {
+          if ([[[AppDelegate sharedDelegate].telephatyService decryptedMessage:msg] isEqualToString:_messageSelected.text]) {
+            amsg = msg;
+          }
+        }
+        if (amsg && [amsg.jumps integerValue] > 1) {
+          [[AppDelegate sharedDelegate].telephatyService resendMessage:amsg];
         }
         _messageSelected = nil;
         break;

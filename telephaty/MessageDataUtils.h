@@ -61,9 +61,21 @@ static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMes
  *  @param date Date of message to retirve.
  *  @param transmiter ID of device which sent the initial message.
  *
+ *  @return return an array of MeeageData, if it's not found it, return nil.
+ */
++ (NSArray *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter;
+
+
+/**
+ *  Recover and specific message
+ *
+ *  @param date Date of message to retirve.
+ *  @param transmiter ID of device which sent the initial message.
+ *  @param part of message if this is a multipart message
+ *
  *  @return return a MeeageData instance, if it's not found it, return nil.
  */
-+ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter;
++ (MessageData *)fetchMessageInDBWithDate:(NSString *)date andTransmitter:(NSString *)transmitter part:(NSString *)part;
 
 /**
  *  Delete all messages in DB

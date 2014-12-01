@@ -66,7 +66,7 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
   }
 #if DEBUG
   NSLog(@"Scanning ...");
-#endif  
+#endif
   
   // By turning on allow duplicates, it allows us to scan more reliably, but
   // if it finds a peripheral that does not have the services we like or

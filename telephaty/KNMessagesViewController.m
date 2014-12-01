@@ -269,6 +269,21 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark - UIAlertViewDelegate
 
+- (MessageData *)partOfMeesage:(JSQMessage *)msg{
+  
+  NSArray *msgs = [MessageDataUtils fetchMessageInDBWithDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
+  
+  MessageData *amsg;
+  for (MessageDataUtils *msg in msgs) {
+    if ([[[AppDelegate sharedDelegate].telephatyService decryptedMessage:msg] isEqualToString:_messageSelected.text]) {
+      amsg = msg;
+      break;
+    }
+  }
+  return amsg;
+  
+}
+
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex{
   
   if (alertView.numberOfButtons == 4) {
@@ -283,21 +298,19 @@ didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath {
       }
       case 2: {
         [self.messages removeObject:_messageSelected];
-        [MessageDataUtils deleteMessageFromTransmitter:_messageSelected.senderId onDate:[self.dateformatter stringFromDate:_messageSelected.date]];
+        
+        MessageData *amsg = [self partOfMeesage:_messageSelected];
+        if (amsg) {
+          [MessageDataUtils deleteMessageFromTransmitter:_messageSelected.senderId onDate:[self.dateformatter stringFromDate:_messageSelected.date] part:amsg.part];
+        }
+        
         _messageSelected = nil;
         [self.collectionView reloadData];
         break;
       }
-      case 3: {      
-        NSLog(@"Resend message:%@", _messageSelected.text);
-        NSArray *msgs = [MessageDataUtils fetchMessageInDBWithDate:[self.dateformatter stringFromDate:_messageSelected.date] andTransmitter:_messageSelected.senderId];
+      case 3: {
         
-        MessageData *amsg;
-        for (MessageDataUtils *msg in msgs) {
-          if ([[[AppDelegate sharedDelegate].telephatyService decryptedMessage:msg] isEqualToString:_messageSelected.text]) {
-            amsg = msg;
-          }
-        }
+        MessageData *amsg = [self partOfMeesage:_messageSelected];
         if (amsg && [amsg.jumps integerValue] > 1) {
           [[AppDelegate sharedDelegate].telephatyService resendMessage:amsg];
         }

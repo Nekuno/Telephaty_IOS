@@ -67,7 +67,6 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 #if DEBUG
   NSLog(@"Scanning ...");
 #endif  
-  [self startScanningTimeoutMonitor];
   
   // By turning on allow duplicates, it allows us to scan more reliably, but
   // if it finds a peripheral that does not have the services we like or
@@ -177,22 +176,6 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
                                          forService:service];
 }
 
-#pragma mark - Connection Timeout
-
-- (void)startScanningTimeoutMonitor {
-//  [self cancelScanningTimeoutMonitor];
-//  [self performSelector:@selector(scanningDidTimeout)
-//             withObject:nil
-//             afterDelay:kKNCBScanningTimeout];
-}
-
-- (void)scanningDidTimeout {
-//  NSLog(@"Scanning did timeout");
-////  NSError *error = [[self class] errorWithDescription:@"Unable to find a BTLE device."];
-////  [self.delegate centralClient:self connectDidFail:error];
-//  
-//  [self cancelScanForPeripherals];
-}
 
 #pragma mark -
 
@@ -383,7 +366,6 @@ didDisconnectPeripheral:(CBPeripheral *)peripheral
       [self subscribe];
     }
   }
-//  [self.delegate centralClientDidConnect:self];
 }
 
 - (void)peripheral:(CBPeripheral *)peripheral
@@ -401,8 +383,8 @@ didDiscoverCharacteristicsForService:(CBService *)service
   NSLog(@"didDiscoverChar: Found %ld characteristic(s)", (unsigned long)service.characteristics.count);
   for (CBCharacteristic *characteristic in service.characteristics) {
     NSLog(@"didDiscoverChar:  Characteristic: %@", characteristic.UUID);
-#endif
   }
+#endif
   
   // If we did discover characteristics, these will get remembered in the
   // CBService instance, so there's no need to do anything more here

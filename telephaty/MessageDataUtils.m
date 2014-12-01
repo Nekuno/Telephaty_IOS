@@ -50,10 +50,10 @@ static NSString *const ItemMDEntityName = @"MessageData";
 }
 
 
-+ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date{
++ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date part:(NSString *)part{
   
   NSManagedObjectContext *moc = [[KNCoreDataService sharedInstance] mainThreadManagedObjectContext];
-  MessageData *msg = [self fetchMessageInDBWithDate:date andTransmitter:transmiter];
+  MessageData *msg = [self fetchMessageInDBWithDate:date andTransmitter:transmiter part:part];
   [moc deleteObject:msg];
   
 }

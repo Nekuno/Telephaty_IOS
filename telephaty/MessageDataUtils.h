@@ -52,8 +52,9 @@ static NSString  *kNotificationRemovedOldMessages = @"kNotificationRemovedOldMes
  *
  *  @param transmiter ID of device which sent the initial message.
  *  @param date Date of meesage
+ *  @param part part of message to delete
  */
-+ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date;
++ (void)deleteMessageFromTransmitter:(NSString *)transmiter onDate:(NSString *)date part:(NSString *)part;
 
 /**
  *  Recover and specific message

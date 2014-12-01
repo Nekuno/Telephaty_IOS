@@ -191,7 +191,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSString *encryptedMessage = [AESCrypt encrypt:message password:PASS_AES_ENCRYPTION];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, @"01",@"01",encryptedMessage];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@0101%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier,encryptedMessage];
   NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
   if ([dataEncrypted length] > klimitBytesBroadcastMessage) {
@@ -199,7 +199,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
     NSDictionary *splitedMsg = [self splitMesage:message ofType:typeMessageBroadcast andLength:[dataEncrypted length]];
     NSString *totalPartsStr =  [[splitedMsg allKeys] count] > 9 ? [NSString stringWithFormat:@"%d",[[splitedMsg allKeys] count]] : [NSString stringWithFormat:@"0%d",[[splitedMsg allKeys] count]];
     for (NSString *key in [[splitedMsg allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)]) {
-      
+  
       NSString *partStr = [key length] > 1 ? key : [NSString stringWithFormat:@"0%@",key];
       //encryptedMessage = [RSA encrypt:splitedMsg[key] withKey:self.publicKey];
       encryptedMessage = [AESCrypt encrypt:splitedMsg[key] password:PASS_AES_ENCRYPTION];

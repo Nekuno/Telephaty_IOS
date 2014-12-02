@@ -51,6 +51,7 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
     _characteristicUUIDs = @[[CBUUID UUIDWithString:characteristicUUID]];
     
     _centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    _connectWhenReady = YES;
   }
   
   return self;
@@ -233,11 +234,8 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
           return;
         }
       }
-      
-      if (self.connectWhenReady) {
-        [self connect];
-        return;
-      }
+      [self connect];
+      return;
       break;
     default:
 #if DEBUG

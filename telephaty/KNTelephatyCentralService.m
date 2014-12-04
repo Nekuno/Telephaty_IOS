@@ -235,8 +235,10 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
         }
       }
       [self connect];
-      return;
       break;
+    case CBCentralManagerStatePoweredOff:
+      self.connectedPeripheral = nil;
+      self.connectedService = nil;
     default:
 #if DEBUG
       NSLog(@"centralManager did update: %d", central.state);
@@ -281,16 +283,6 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
     foundSuitablePeripheral = [self.serviceName isEqualToString:peripheralName];
   }
   
-  // At this point, if we still haven't found one, chances are the
-  // iOS app has been killed in the background and the service is not
-  // responding any more.
-  //
-  // There isn't much you can do at this point since connecting the the
-  // peripheral won't really do anything if you can't spot the service.
-  //
-  // TODO: check what alternatives there are, maybe opening up bluetooth-central
-  //       as a UIBackgroundModes will work.
-  
   
   // If we found something to connect to, start connecting to it.
   // TODO: This does not deal with multiple devices advertising the same service
@@ -313,7 +305,7 @@ static const NSTimeInterval kKNCBRequestTimeout     = 20.0;
 #if DEBUG
   NSLog(@"didConnect: %@", peripheral.name);
 #endif
-  [self cancelConnectionTimeoutMonitor:peripheral];
+ //
   self.connectedPeripheral = peripheral;
   [self discoverServices:peripheral];
 }
@@ -323,8 +315,9 @@ didFailToConnectPeripheral:(CBPeripheral *)peripheral
                  error:(NSError *)error {
 #if DEBUG
   NSLog(@"failedToConnect: %@", peripheral);
-  [self cancelConnectionTimeoutMonitor:peripheral];
 #endif
+  [self cancelConnectionTimeoutMonitor:peripheral];
+  self.connectedPeripheral = nil;
 }
 
 - (void)centralManager:(CBCentralManager *)central
@@ -393,7 +386,6 @@ didDiscoverCharacteristicsForService:(CBService *)service
 #if DEBUG
     NSLog(@"didDiscoverChar: did not discover any characterestics for service. aborting.");
 #endif
-    [self disconnect];
     return;
   }
   

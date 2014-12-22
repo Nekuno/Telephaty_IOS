@@ -14,8 +14,8 @@
 
 static const NSInteger kIndexStartEmisorForType1     = 16.0;
 static const NSInteger kIndexStartEmisorForType2     = 32.0;
-static const NSInteger kIndexStarMsgForType1         = 36.0;
-static const NSInteger kIndexStarMsgForType2         = 52.0;
+static const NSInteger kIndexStarMsgForType1         = 39.0;
+static const NSInteger kIndexStarMsgForType2         = 55.0;
 
 #pragma mark - Parameters & Constants
 
@@ -160,14 +160,14 @@ static NSString *const ItemMDEntityName = @"MessageData";
   if ([typeMsg integerValue] == 1) {
     message = [msgData substringFromIndex:kIndexStarMsgForType1];
     emisorId = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType1, 16)];
-    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 4, 2)];
-    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 2, 2)];
+    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 7, 2)];
+    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType1 - 5, 2)];
   } else {
     message = [msgData substringFromIndex:kIndexStarMsgForType2];
     emisorId = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType2, 16)];
     receiver = [msgData substringWithRange:NSMakeRange(kIndexStartEmisorForType1, 16)];
-    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 4, 2)];
-    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 2, 2)];
+    part = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 7, 2)];
+    totalParts = [msgData substringWithRange:NSMakeRange(kIndexStarMsgForType2 - 5, 2)];
   }
   
   NSMutableDictionary *msgDict = [@{@"type":typeMsg,

@@ -191,7 +191,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSString *encryptedMessage = [AESCrypt encrypt:message password:PASS_AES_ENCRYPTION];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@0101%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier,encryptedMessage];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@0101000%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier,encryptedMessage];
   NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
   if ([dataEncrypted length] > klimitBytesBroadcastMessage) {
@@ -203,7 +203,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
       NSString *partStr = [key length] > 1 ? key : [NSString stringWithFormat:@"0%@",key];
       //encryptedMessage = [RSA encrypt:splitedMsg[key] withKey:self.publicKey];
       encryptedMessage = [AESCrypt encrypt:splitedMsg[key] password:PASS_AES_ENCRYPTION];
-      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, partStr,totalPartsStr,encryptedMessage];
+      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@000%@", @(typeMessageBroadcast),dateStr, (long)jumps, self.identifier, partStr,totalPartsStr,encryptedMessage];
       [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
       NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
       [self.peripheralService sendToSubscribers:dataMsg];
@@ -226,7 +226,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   NSData *dataEncrypted = [encryptedMessage dataUsingEncoding:NSUTF8StringEncoding];
   
   NSString *dateStr = [self.formatter stringFromDate:[NSDate date]];
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@0101%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, encryptedMessage];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@0101000%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, encryptedMessage];
   
   if ([dataEncrypted length] > klimitBytesDirectMessage) {
     
@@ -238,7 +238,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
       NSString *partStr = [key length] > 1 ? key : [NSString stringWithFormat:@"0%@",key];
       //encryptedMessage = [RSA encrypt:splitedMsg[key] withKey:self.publicKey];
       encryptedMessage = [AESCrypt encrypt:splitedMsg[key] password:PASS_AES_ENCRYPTION];
-      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, partStr,totalPartsStr,encryptedMessage];
+      NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@000%@", @(typeMessageDirect),dateStr, (long)jumps,to, self.identifier, partStr,totalPartsStr,encryptedMessage];
       [MessageDataUtils addMessageInMOC:[[KNCoreDataService sharedInstance] managedObjectContext] withData:messageToSend];
       NSData *dataMsg = [messageToSend dataUsingEncoding:NSUTF8StringEncoding];
       [self.peripheralService sendToSubscribers:dataMsg];
@@ -255,7 +255,7 @@ typedef NS_ENUM(NSUInteger, TypeMessage) {
   
   NSInteger jumps = [message.jumps integerValue] -1;
 
-  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@%@", @(typeMessageBroadcast),message.date, (long)jumps, message.transmitter,message.part, message.totalparts, message.message];
+  NSString *messageToSend = [NSString stringWithFormat:@"%@%@%ld%@%@%@000%@", @(typeMessageBroadcast),message.date, (long)jumps, message.transmitter,message.part, message.totalparts, message.message];
   [self.peripheralService sendToSubscribers:[messageToSend dataUsingEncoding:NSUTF8StringEncoding]];
   
 }

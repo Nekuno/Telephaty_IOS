@@ -108,7 +108,7 @@ For more info contact us in mail@mail.com
 
 ## Licence
 
-Telephaty Api IOS is available under the MIT licence. See the LICENCE file for more info.
+Telephaty Api IOS is available under the AGPL-3.0 licence. See the LICENCE file for more info.
 
 
 Release Notes
